@@ -55,10 +55,25 @@ class adminController
     $alumnis = AlumniModel::getUnverifiedAlumni();
     $employers = EmployerModel::getUnverifiedEmployer();
     $faculty = FacultyModel::getUnverifiedFaculty();
+    $db = Flight::db();
+    $stmt = $db->prepare("SELECT * 
+    FROM users 
+    LEFT JOIN userdetails 
+    ON users.id = userdetails.user_id 
+    LEFT JOIN rejected_users
+    ON users.id = rejected_users.user_id
+    WHERE users.is_verified = '2' 
+    ORDER BY userdetails.first_name ASC;
+    ");
+    $stmt->execute();
+    $rejected = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    $rejectedAlumni = AlumniModel::getRejectedAlumni();
 
     Flight::view()->set('alumniUnverified', $alumnis);
     Flight::view()->set('employerUnverified', $employers);
     Flight::view()->set('facultyUnverified', $faculty);
+    Flight::view()->set('rejectedAll', $rejected);
+    Flight::view()->set('rejectedAlumni', $rejectedAlumni);
 
     $this->app->render('admin/validateAlumni', [], 'validateAlumni');
     $this->app->render('admin/validateEmployer', [], 'validateEmployer');

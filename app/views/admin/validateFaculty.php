@@ -1,4 +1,3 @@
-<?php bdump($facultyUnverified) ?>
 <div class="card-header d-flex justify-content-between">
   <div class="header-title">
     <h4 class="card-title">Validate Faculty Account</h4>
