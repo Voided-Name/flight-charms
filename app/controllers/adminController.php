@@ -88,15 +88,26 @@ class adminController
 
   public function reject()
   {
+    session_start();
     $user_id = $_POST['delete_id'];
     $reason = $_POST['reason'];
     $dateTime = $_POST['rejected_date'];
+    bdump($user_id);
+    bdump($reason);
+    bdump($dateTime);
     $db = Flight::db();
     $stmt = $db->prepare("UPDATE users SET is_verified = 2 WHERE id = :user_id");
     $stmt->execute(['user_id' => $user_id]);
 
     $stmt = $db->prepare("INSERT INTO rejected_users VALUES (:user_id, :reason, :date)");
     $stmt->execute(['user_id' => $user_id, 'reason' => $reason, 'date' => $dateTime]);
-    //Flight::redirect(Flight::request()->base . '/dashboard/admin/validate');
+
+    if ($stmt) {
+      $_SESSION['rejected'] = true;
+      Flight::redirect(Flight::request()->base . '/dashboard/admin/validate');
+    } else {
+      $_SESSION['rejected'] = false;
+      Flight::redirect(Flight::request()->base . '/dashboard/admin/validate');
+    }
   }
 }

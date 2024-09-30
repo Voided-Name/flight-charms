@@ -103,7 +103,7 @@
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-success accButton" data-id="<?php echo $employerUnverified[$x]['user_id_alias']; ?>" id="acceptButton">Approve</button>
-                    <button type="button" class="btn btn-danger delButton" data-bs-dismiss="modal" data-id="<?php echo $employerUnverified[$x]['user_id']; ?>">Decline</button>
+                    <button type="button" class="btn btn-danger delButton" data-bs-dismiss="modal" data-id="<?php echo $employerUnverified[$x]['user_id_alias']; ?>">Decline</button>
                   </div>
                 </div>
               </div>

@@ -1,3 +1,4 @@
+<?php bdump($_SESSION['validated']) ?>
 <div class="conatiner-fluid content-inner mt-n5 py-0">
   <div>
     <div class="row">
@@ -40,13 +41,30 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  <?php if (isset($_SESSION['validated'])) { ?>
-    Swal.fire(
-      'Approved!',
-      'User account has been approved to the system',
-      'success'
-    )
-  <?php } ?>
+  <?php if (isset($_SESSION['validated'])) {
+    if ($_SESSION['validated'] === TRUE) { ?>
+      Swal.fire(
+        'Approved!',
+        'User account has been approved to the system!',
+        'success'
+      )
+  <?php
+      $_SESSION['validated'] = false;
+    }
+  } ?>
+
+  <?php if (isset($_SESSION['rejected'])) {
+    if ($_SESSION['rejected'] === TRUE) { ?>
+      Swal.fire(
+        'Rejected!',
+        'User account has been rejected!',
+        'success'
+      )
+  <?php
+      $_SESSION['rejected'] = false;
+    }
+  } ?>
+
   document.querySelectorAll('.accButton').forEach(function(button) {
     button.addEventListener('click', function() {
       var id = this.dataset.id;
@@ -92,34 +110,28 @@
         confirmButtonText: 'Yes, decline it!'
       }).then((result) => {
         if (result.isConfirmed && result.value) {
-          Swal.fire(
-            'Declined!',
-            'The action has been declined.',
-            'success'
-          ).then(() => {
-            var form = document.createElement('form');
-            form.method = 'POST';
-            form.action = 'reject';
-            form.style.display = 'none';
-            var inputId = document.createElement('input');
-            inputId.name = 'delete_id';
-            inputId.value = id;
-            form.appendChild(inputId);
-            var inputReason = document.createElement('input');
-            inputReason.name = 'reason';
-            inputReason.value = result.value;
-            form.appendChild(inputReason);
-            var rejectedDate = document.createElement('input');
-            rejectedDate.name = 'rejected_date';
+          var form = document.createElement('form');
+          form.method = 'POST';
+          form.action = 'reject';
+          form.style.display = 'none';
+          var inputId = document.createElement('input');
+          inputId.name = 'delete_id';
+          inputId.value = id;
+          form.appendChild(inputId);
+          var inputReason = document.createElement('input');
+          inputReason.name = 'reason';
+          inputReason.value = result.value;
+          form.appendChild(inputReason);
+          var rejectedDate = document.createElement('input');
+          rejectedDate.name = 'rejected_date';
 
-            now = new Date();
-            formattedDateTime = now.toISOString().slice(0, 19).replace('T', ' ');
+          now = new Date();
+          formattedDateTime = now.toISOString().slice(0, 19).replace('T', ' ');
 
-            rejectedDate.value = formattedDateTime;
-            form.appendChild(rejectedDate);
-            document.body.appendChild(form);
-            form.submit();
-          });
+          rejectedDate.value = formattedDateTime;
+          form.appendChild(rejectedDate);
+          document.body.appendChild(form);
+          form.submit();
         } else {
           Swal.fire(
             'Cancelled',
