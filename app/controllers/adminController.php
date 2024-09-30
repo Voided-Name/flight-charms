@@ -56,7 +56,11 @@ class adminController
     $employers = EmployerModel::getUnverifiedEmployer();
     $faculty = FacultyModel::getUnverifiedFaculty();
     $db = Flight::db();
-    $stmt = $db->prepare("SELECT * 
+    $stmt = $db->prepare("SELECT
+      users.id as user_id_alias,
+      users.*,
+      userdetails.*,
+      rejected_users.*
     FROM users 
     LEFT JOIN userdetails 
     ON users.id = userdetails.user_id 
@@ -68,12 +72,16 @@ class adminController
     $stmt->execute();
     $rejected = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     $rejectedAlumni = AlumniModel::getRejectedAlumni();
+    $rejectedEmployer = EmployerModel::getRejectedEmployer();
+    $rejectedFaculty = FacultyModel::getRejectedFaculty();
 
     Flight::view()->set('alumniUnverified', $alumnis);
     Flight::view()->set('employerUnverified', $employers);
     Flight::view()->set('facultyUnverified', $faculty);
     Flight::view()->set('rejectedAll', $rejected);
     Flight::view()->set('rejectedAlumni', $rejectedAlumni);
+    Flight::view()->set('rejectedEmployer', $rejectedEmployer);
+    Flight::view()->set('rejectedFaculty', $rejectedFaculty);
 
     $this->app->render('admin/validateAlumni', [], 'validateAlumni');
     $this->app->render('admin/validateEmployer', [], 'validateEmployer');
@@ -83,6 +91,29 @@ class adminController
 
     Flight::render('header', [], 'header');
     Flight::render('admin/sidebar', [], 'sidebar');
+  }
+
+  public function recon()
+  {
+    session_start();
+    $user_id = $_POST['recon_id'];
+    $reason = $_POST['reason'];
+    $db = Flight::db();
+    $stmt = $db->prepare("UPDATE users SET is_verified = 1 WHERE id = :user_id");
+    $stmt->execute(['user_id' => $user_id]);
+    if ($stmt) {
+      $stmt = $db->prepare("INSERT INTO recon_list (user_id, reason) VALUES (:user_id, :reason)");
+      $stmt->execute(['user_id' => $user_id, 'reason' => $reason]);
+
+      bdump($stmt);
+
+      Flight::redirect(Flight::request()->base . '/dashboard/admin/missing');
+      $_SESSION['validated'] = true;
+      Flight::redirect(Flight::request()->base . '/dashboard/admin/validate');
+    } else {
+      $_SESSION['validated'] = false;
+      Flight::redirect(Flight::request()->base . '/dashboard/admin/validate');
+    }
   }
 
   public function approve()

@@ -136,7 +136,6 @@
           Swal.fire(
             'Cancelled',
             'Your action has not been declined.',
-
             'error'
           );
         }
@@ -151,8 +150,6 @@
     button.addEventListener('click', function() {
       var id = this.dataset.id;
       var reason = this.dataset.reason || '';
-
-
       Swal.fire({
         title: 'Are you sure?',
         text: "You want to Reconsider this acccount!",
@@ -173,10 +170,10 @@
           ).then(() => {
             var form = document.createElement('form');
             form.method = 'POST';
+            form.action = 'recon'
             form.style.display = 'none';
             var inputId = document.createElement('input');
             inputId.name = 'recon_id';
-
             inputId.value = id;
             form.appendChild(inputId);
             var inputReason = document.createElement('input');

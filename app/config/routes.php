@@ -33,6 +33,7 @@ $router->group('/dashboard', function () use ($router, $app) {
     $router->get('/validate', [adminController::class, 'validate'], false, 'adminValidate')->addMiddleware([new layoutDefault()]);
     $router->post('/approve', [adminController::class, 'approve']);
     $router->post('/reject', [adminController::class, 'reject']);
+    $router->post('/recon', [adminController::class, 'recon']);
     $router->get('/list', function () use ($app) {
       session_start();
       $_SESSION['adminPage'] = "list";

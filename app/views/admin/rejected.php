@@ -84,9 +84,8 @@
                     </div>
 
                     <?php if ($rejectedAll[$x]['role'] == 1) {
-                      bdump($rejectedAlumni);
                       foreach ($rejectedAlumni as $rejectedAlumniInstance) {
-                        if ($rejectedAlumniInstance['user_id_alias'] == $rejectedAll[$x]['user_id']) {
+                        if ($rejectedAlumniInstance['user_id_alias'] == $rejectedAll[$x]['user_id_alias']) {
                           $rejAlumni = $rejectedAlumniInstance;
                           break;
                         }
@@ -99,105 +98,89 @@
 
                       <div class="row mb-2">
                         <div class="col-md-4"><strong>Year Started:</strong></div>
-                        <div class="col-md-8"><?php echo $rejAlumni['year_started']; ?></div>
+                        <div class="col-md-8"><?php echo $rejAlumni['year_started'] ? $rejAlumni['year_started'] : "~ Not Filled Yet ~"; ?></div>
                       </div>
                       <div class="row mb-2">
                         <div class="col-md-4"><strong>Year Graduated:</strong></div>
-                        <div class="col-md-8"><?php echo $rejAlumni['year_graduated']; ?></div>
+                        <div class="col-md-8"><?php echo $rejAlumni['year_graduated'] ? $rejAlumni['year_graduated'] : "~ Not Filled Yet ~"; ?></div>
                       </div>
                       <div class="row mb-2">
                         <div class="col-md-4"><strong>Campus:</strong></div>
-                        <div class="col-md-8"><?php echo $camp0; ?></div>
+                        <div class="col-md-8"><?php echo $camp0 ? $camp0 : "~ Not Filled Yet~"; ?></div>
                       </div>
                       <div class="row mb-2">
                         <div class="col-md-4"><strong>Course:</strong></div>
-                        <div class="col-md-8"><?php echo $course0; ?></div>
+                        <div class="col-md-8"><?php echo $course0 ? $course0 : "~ Not Filled Yet ~"; ?></div>
                       </div>
                       <div class="row mb-2">
                         <div class="col-md-4"><strong>Major:</strong></div>
-                        <div class="col-md-8"><?php echo $major0;; ?></div>
+                        <div class="col-md-8"><?php echo $major0 ? $major0 : "~ Not Filled Yet ~"; ?></div>
                       </div>
                       <div class="row mb-3">
                         <div class="col-md-4"><strong>Alumni Number:</strong></div>
-                        <div class="col-md-8"><?php echo $rejAlumni['studnum']; ?></div>
+                        <div class="col-md-8"><?php echo $rejAlumni['studnum'] ? $rejAlumni['studnum'] : "~ Not Filled Yet ~"; ?></div>
                       </div>
 
                     <?php } else if ($rejectedAll[$x]['role'] == 2) {
-                      $rejEmp =  $func->select_one('employer_users', array('user_id', '=', $rejectedAll[$x]['user_id']));
-                      $company = $func->select_one('companies', array('id', '=', $rejEmp[0]['company_id']));
-                      $comp0 = $company[0]['name'];
-                      $compSite0 = $company[0]['website'];
-                      if ($company[0]['region'] == '') {
-                        $compAdd0 = " ";
-                      } else {
-                        $compAdd0 = $company[0]['street_add'] . ", " . $company[0]['barangay'] . ", " . $company[0]['city'] . ", " . $company[0]['province'];
+                      foreach ($rejectedEmployer as $rejectedEmployerInstance) {
+                        if ($rejectedEmployerInstance['user_id_alias'] == $rejectedAll[$x]['user_id_alias']) {
+                          $rejEmp = $rejectedEmployerInstance;
+                          break;
+                        }
                       }
+                      bdump($rejEmp);
                     ?>
                       <div class="row mb-2">
                         <div class="col-md-4"><strong>Position:</strong></div>
-                        <div class="col-md-8"><?php echo $rejEmp[0]['company_position']; ?></div>
+                        <div class="col-md-8"><?php echo $rejEmp['company_position'] ? $rejEmp['company_position'] : "~ Not Yet Filled ~"; ?></div>
                       </div>
                       <div class="row mb-2">
-
                         <div class="col-md-4"><strong>Employer ID:</strong></div>
-                        <div class="col-md-8"><?php echo $rejEmp[0]['employer_num']; ?></div>
+                        <div class="col-md-8"><?php echo $rejEmp['employer_num'] ? $rejEmp['employer_num'] : "~ Not Yet Filled ~"; ?></div>
                       </div>
-
-
                       <div class="row mb-2">
                         <div class="col-md-4"><strong>Company Name:</strong></div>
-
-                        <div class="col-md-8"><?php echo $comp0; ?></div>
+                        <div class="col-md-8"><?php echo $rejEmp['company_name'] ? $rejEmp['company_name'] : "~ Not Yet Filled ~"; ?></div>
                       </div>
-
                       <div class="row mb-2">
                         <div class="col-md-4"><strong>Company Address:</strong></div>
-
-                        <div class="col-md-8"><?php echo $compAdd0; ?></div>
+                        <div class="col-md-8"><?php echo $rejEmp['company_address'] ? $rejEmp['company_address'] : "~ Not Yet Filled ~"; ?></div>
                       </div>
                       <div class="row mb-2">
                         <div class="col-md-4"><strong>Company Website:</strong></div>
-                        <div class="col-md-8"><?php echo $compSite0; ?></div>
-
+                        <div class="col-md-8"><?php echo $rejEmp['company_website'] ? $rejEmp['company_website'] : "~ Not Yet Filled ~"; ?></div>
                       </div>
                     <?php } else if ($rejectedAll[$x]['role'] == 3) {
-
-                      $rejFac =  $func->select_one('faculty', array('user_id', '=', $rejectedAll[$x]['user_id']));
-                      $campus = $func->select_one('campuses', array('campusID', '=', $rejFac[0]['campus_id']));
-                      $camp0 = $campus[0]['campusName'];
-
-                      $acadrank = $func->select_one('faculty_rankings', array('id', '=', $rejFac[0]['acadrank_id']));
-                      $acadrank0 = $acadrank[0]['description'];
-
-
+                      foreach ($rejectedFaculty as $rejectedFacultyInstance) {
+                        if ($rejectedFacultyInstance['user_id_alias'] == $rejectedAll[$x]['user_id_alias']) {
+                          $rejFac = $rejectedFacultyInstance;
+                          break;
+                        }
+                      }
+                      bdump($rejFac);
                     ?>
-
                       <div class="row mb-2">
                         <div class="col-md-4"><strong>Academic Rank:</strong></div>
-                        <div class="col-md-8"><?php echo $acadrank0; ?></div>
+                        <div class="col-md-8"><?php echo $rejFac['f_rank_description'] ? $rejFac['f_rank_description'] : "~ Not Yet Filled ~"; ?></div>
                       </div>
                       <div class="row mb-2">
-
                         <div class="col-md-4"><strong>Campus:</strong></div>
-                        <div class="col-md-8"><?php echo $camp0; ?></div>
+                        <div class="col-md-8"><?php echo $rejFac['campusName'] ? $rejFac['campusName'] : '~ Not Filled Yet ~' ?></div>
                       </div>
                       <div class="row mb-2">
-
                         <div class="col-md-4"><strong>Employee ID:</strong></div>
-                        <div class="col-md-8"><?php echo $rejFac[0]['employee_num']; ?></div>
+                        <div class="col-md-8"><?php echo $rejFac['employee_num'] ? $rejFac['employee_num'] : "~ Not Filled Yet ~"; ?></div>
                       </div>
-
-
                     <?php  } ?>
                   </div>
                   <div class="row mb-2">
                     <div class="col-md-4"><strong>Reason for Declining:</strong></div>
-                    <div class="col-md-8"><?php echo $rejReason0; ?></div>
+                    <div class="col-md-8"><?php echo $rejectedAll[$x]['reason']; ?></div>
                   </div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-success recButton" data-bs-dismiss="modal" data-id="<?php echo $rejectedAll[$x]['user_id']; ?>">Reconsider</button>
+                  <button type="button" class="btn btn-success recButton" data-bs-dismiss="modal" data-id="<?php echo $rejectedAll[$x]['user_id_alias']; ?>">Reconsider</button>
                 </div>
               </div>
             </div>
