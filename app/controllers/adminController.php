@@ -72,11 +72,18 @@ class adminController
 
   public function approve()
   {
+    session_start();
     $user_id = $_POST['approve_id'];
     $db = Flight::db();
     $stmt = $db->prepare("UPDATE users SET is_verified = 1 WHERE id = :user_id");
     $stmt->execute(['user_id' => $user_id]);
-    Flight::redirect(Flight::request()->base . '/dashboard/admin/validate');
+    if ($stmt) {
+      $_SESSION['validated'] = true;
+      Flight::redirect(Flight::request()->base . '/dashboard/admin/validate');
+    } else {
+      $_SESSION['validated'] = false;
+      Flight::redirect(Flight::request()->base . '/dashboard/admin/validate');
+    }
   }
 
   public function reject()

@@ -40,6 +40,13 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+  <?php if (isset($_SESSION['validated'])) { ?>
+    Swal.fire(
+      'Approved!',
+      'User account has been approved to the system',
+      'success'
+    )
+  <?php } ?>
   document.querySelectorAll('.accButton').forEach(function(button) {
     button.addEventListener('click', function() {
       var id = this.dataset.id;
@@ -53,22 +60,16 @@
         confirmButtonText: 'Yes, approve it!'
       }).then((result) => {
         if (result.isConfirmed) {
-          Swal.fire(
-            'Approved!',
-            'The action has been approved.',
-            'success'
-          ).then(() => {
-            var form = document.createElement('form');
-            form.method = 'POST';
-            form.action = 'approve'
-            form.style.display = 'none';
-            var input = document.createElement('input');
-            input.name = 'approve_id';
-            input.value = id;
-            form.appendChild(input);
-            document.body.appendChild(form);
-            form.submit();
-          });
+          var form = document.createElement('form');
+          form.method = 'POST';
+          form.action = 'approve'
+          form.style.display = 'none';
+          var input = document.createElement('input');
+          input.name = 'approve_id';
+          input.value = id;
+          form.appendChild(input);
+          document.body.appendChild(form);
+          form.submit();
         }
       });
     });
