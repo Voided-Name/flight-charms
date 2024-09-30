@@ -1,4 +1,3 @@
-<?php bdump($_SESSION['validated']) ?>
 <div class="conatiner-fluid content-inner mt-n5 py-0">
   <div>
     <div class="row">
@@ -13,7 +12,6 @@
             </li>
             <li class="nav-item" role="presentation">
               <button class="nav-link" id="faculty-tab" data-bs-toggle="tab" data-bs-target="#faculty" type="button" role="tab" aria-controls="faculty" aria-selected="false">Faculty</button>
-
             </li>
             <li class="nav-item" role="presentation">
               <button class="nav-link" id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejected" type="button" role="tab" aria-controls="rejected" aria-selected="false">Rejected</button>
@@ -23,7 +21,6 @@
             <div class="tab-pane fade show active" id="alumni" role="tabpanel" aria-labelledby="alumni-tab">
               <?= $validateAlumni  ?>
             </div>
-
             <div class="tab-pane fade" id="employer" role="tabpanel" aria-labelledby="employer-tab">
               <?= $validateEmployer ?>
             </div>
@@ -142,9 +139,6 @@
       });
     });
   });
-
-
-
 
   document.querySelectorAll('.recButton').forEach(function(button) {
     button.addEventListener('click', function() {

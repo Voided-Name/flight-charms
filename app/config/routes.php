@@ -34,14 +34,7 @@ $router->group('/dashboard', function () use ($router, $app) {
     $router->post('/approve', [adminController::class, 'approve']);
     $router->post('/reject', [adminController::class, 'reject']);
     $router->post('/recon', [adminController::class, 'recon']);
-    $router->get('/list', function () use ($app) {
-      session_start();
-      $_SESSION['adminPage'] = "list";
-      $app->render('admin/list', ['username' => $_SESSION['username']], 'home');
-      Flight::render('header', [], 'header');
-      Flight::render('admin/sidebar', [], 'sidebar');
-      $app->render('admin/list');
-    }, false, 'adminhome')->addMiddleware([new layoutDefault()]);
+    $router->get('/list', [adminController::class, 'list'], false, 'adminList')->addMiddleware([new layoutDefault()]);
     $router->get('/generate', function () use ($app) {
       session_start();
       $_SESSION['adminPage'] = "generate";

@@ -93,6 +93,28 @@ class adminController
     Flight::render('admin/sidebar', [], 'sidebar');
   }
 
+  public function list()
+  {
+    session_start();
+    $_SESSION['adminPage'] = "list";
+
+    $alumniVerified = AlumniModel::getVerifiedAlumni();
+    $employerVerified = EmployerModel::getVerifiedEmployer();
+
+    Flight::view()->set('alumniVerified', $alumniVerified);
+    Flight::view()->set('employerVerified', $employerVerified);
+
+
+    $this->app->render('admin/listAlumni', [], 'listAlumni');
+    $this->app->render('admin/listEmployer', [], 'listEmployer');
+    $this->app->render('admin/listFaculty', [], 'listFaculty');
+    $this->app->render('admin/list', ['username' => $_SESSION['username']], 'home');
+
+
+    Flight::render('header', [], 'header');
+    Flight::render('admin/sidebar', [], 'sidebar');
+  }
+
   public function recon()
   {
     session_start();
