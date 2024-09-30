@@ -35,6 +35,7 @@ $router->group('/dashboard', function () use ($router, $app) {
     $router->post('/reject', [adminController::class, 'reject']);
     $router->post('/recon', [adminController::class, 'recon']);
     $router->get('/list', [adminController::class, 'list'], false, 'adminList')->addMiddleware([new layoutDefault()]);
+    $router->get('/create', [adminController::class, 'create'], false, 'adminCreate')->addMiddleware([new layoutDefault()]);
     $router->get('/generate', function () use ($app) {
       session_start();
       $_SESSION['adminPage'] = "generate";

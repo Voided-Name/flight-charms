@@ -100,16 +100,62 @@ class adminController
 
     $alumniVerified = AlumniModel::getVerifiedAlumni();
     $employerVerified = EmployerModel::getVerifiedEmployer();
+    $facultyVerified = FacultyModel::getVerifiedFaculty();
 
     Flight::view()->set('alumniVerified', $alumniVerified);
     Flight::view()->set('employerVerified', $employerVerified);
-
+    Flight::view()->set('facultyVerified', $facultyVerified);
 
     $this->app->render('admin/listAlumni', [], 'listAlumni');
     $this->app->render('admin/listEmployer', [], 'listEmployer');
     $this->app->render('admin/listFaculty', [], 'listFaculty');
     $this->app->render('admin/list', ['username' => $_SESSION['username']], 'home');
 
+    Flight::render('header', [], 'header');
+    Flight::render('admin/sidebar', [], 'sidebar');
+    Flight::render('admin/create');
+  }
+
+  public function create()
+  {
+    session_start();
+    $_SESSION['adminPage'] = "create";
+
+    $db = Flight::db();
+
+    $stmt = $db->prepare("SELECT * FROM course");
+    $stmt->execute();
+    $courses = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    $stmt = $db->prepare("SELECT * FROM campuses");
+    $stmt->execute();
+    $campuses = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    $stmt = $db->prepare("SELECT * FROM coursesmajor");
+    $stmt->execute();
+    $majors = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    $stmt = $db->prepare("SELECT * FROM faculty_rankings");
+    $stmt->execute();
+    $acadRanks = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    $stmt = $db->prepare("SELECT * FROM companies");
+    $companies = $stmt->execute();
+    $companies = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    $mapMajors = array_combine(array_column($majors, 'majorName'), array_column($majors, 'id;'));
+
+    Flight::view()->set('courses', $courses);
+    Flight::view()->set('campuses', $campuses);
+    Flight::view()->set('majors', $majors);
+    Flight::view()->set('acadRanks', $acadRanks);
+    Flight::view()->set('companies', $companies);
+    Flight::view()->set('mapMajors', $mapMajors);
+
+    $this->app->render('admin/createAlumni', [], 'createAlumni');
+    $this->app->render('admin/createEmployer', [], 'createEmployer');
+    $this->app->render('admin/createFaculty', [], 'createFaculty');
+    $this->app->render('admin/create', ['username' => $_SESSION['username']], 'home');
 
     Flight::render('header', [], 'header');
     Flight::render('admin/sidebar', [], 'sidebar');
