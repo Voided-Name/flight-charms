@@ -25,9 +25,9 @@
   </div>
   <?php
   echo utilsController::renderDateInput('facultyBDate', 'facultyBDate', 'Birth Date', true, '', '', 6, 12);
-  echo utilsController::renderSelectWithOptions('facultyCampus', 'facultyCampus', 'Campus', array_map(fn($campus) => ['value' => $campus['campusID'], 'name' => $campus['campusName']], $campuses), $facultyData[0]['campus']);
+  echo utilsController::renderSelectWithOptions('facultyCampus', 'facultyCampus', 'Campus', array_map(fn($campus) => ['value' => $campus['campusID'], 'name' => $campus['campusName']], $campuses), '');
   echo utilsController::renderTextInput('facultyID', 'facultyID', 'Faculty ID', true, '', '', 4, 12);
-  echo utilsController::renderSelectWithOptions('facultyRank', 'facultyRank', 'Academic Rank', array_map(fn($acadRank) => ['value' => $acadRank['id'], 'name' => $acadRank['description']], $acadRanks), $facultyData[0]['acadrank_id']);
+  echo utilsController::renderSelectWithOptions('facultyRank', 'facultyRank', 'Academic Rank', array_map(fn($acadRank) => ['value' => $acadRank['faculty_rank_id'], 'name' => $acadRank['f_rank_description']], $acadRanks), '');
   echo utilsController::renderPasswordInput('facultyPass', 'facultyPass', 'Temporary Password', true, '', '', 6, 12);
   echo utilsController::renderPasswordInput('facultyConfPass', 'facultyConfPass', 'Confirm Temporary Password', true, '', '', 6, 12);
   ?>

@@ -1,4 +1,5 @@
 <?php
+
 $userNameErr = false;
 $emailInvalid = false;
 $emailErrExists = false;
@@ -479,6 +480,7 @@ $regionInformation['NCR'] = 'NCR';
  */
 //d($err);
 ?>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script>
   <?php
   if ($userNameErr || $emailInvalid || $emailErrExists || $differentPassword) {
@@ -586,7 +588,6 @@ $regionInformation['NCR'] = 'NCR';
   let userRoles = ['alumni', 'employer', 'faculty'];
 
   $(document).ready(function() {
-
     userRoles.forEach(function(role, index) {
       $('#' + role + 'BDate').focusout(function() {
         var inputDate = new Date($(this).val());
@@ -612,7 +613,7 @@ $regionInformation['NCR'] = 'NCR';
       });
     });
 
-    $.getJSON("../locations.json", function(result) {
+    $.getJSON("assets/locations.json", function(result) {
       $.each(result, function(i, field) {
         userRoles.forEach(function(role, index) {
           $('#' + role + 'Region').append(`<option value="${i}">
@@ -637,7 +638,7 @@ $regionInformation['NCR'] = 'NCR';
     });
 
     function getProvinces(region_name, role) {
-      $.getJSON("../locations.json", function(result) {
+      $.getJSON("assets/locations.json", function(result) {
         $.each(result[region_name].province_list, function(key, value) {
           $('#' + role + 'Province').append(`<option value="${key}">
                                        ${key}
@@ -656,7 +657,7 @@ $regionInformation['NCR'] = 'NCR';
     });
 
     function getMunicipality(region_name, province_name, role) {
-      $.getJSON("../locations.json", function(result) {
+      $.getJSON("assets/locations.json", function(result) {
         // console.log(result[region_name].province_list[province_name]);
         $.each(result[region_name].province_list[province_name].municipality_list, function(key, value) {
           // console.log(key);
@@ -677,7 +678,7 @@ $regionInformation['NCR'] = 'NCR';
     });
 
     function getBarangay(region_name, province_name, municipality_name, role) {
-      $.getJSON("../locations.json", function(result) {
+      $.getJSON("assets/locations.json", function(result) {
         // console.log(result[region_name].province_list[province_name].municipality_list[municipality_name].barangay_list);
         $.each(result[region_name].province_list[province_name].municipality_list[municipality_name].barangay_list, function(key, value) {
           // console.log(key);

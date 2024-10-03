@@ -26,7 +26,7 @@
   <?php
   echo utilsController::renderDateInput('alumniBDate', 'alumniBDate', 'Birth Date', true, '', '', 6, 12);
   echo utilsController::renderTextInput('alumniStudId', 'alumniStudId', 'Alumni ID', true, '', '', 4, 12);
-  echo utilsController::renderSelectWithOptions('alumniCourse', 'alumniCourse', 'Course', array_map(fn($course) => ['value' => $course['courseID'], 'name' => $course['courseName']], $courses), $alumniData[0]['course_id']);
+  echo utilsController::renderSelectWithOptions('alumniCourse', 'alumniCourse', 'Course', array_map(fn($course) => ['value' => $course['courseID'], 'name' => $course['courseName']], $courses), '');
   ?>
   <div class="col-md-4 col-sm-12" id="">
     <label for="alumniMajor" class="form-label">Major</label>
@@ -35,13 +35,13 @@
     </select>
   </div>
   <?php
-  echo utilsController::renderSelectWithOptions('alumniCampus', 'alumniCampus', 'Campus', array_map(fn($campus) => ['value' => $campus['campusID'], 'name' => $campus['campusName']], $campuses), $alumniData[0]['campus']);
+  echo utilsController::renderSelectWithOptions('alumniCampus', 'alumniCampus', 'Campus', array_map(fn($campus) => ['value' => $campus['campusID'], 'name' => $campus['campusName']], $campuses), '');
   echo utilsController::renderNumberInput('alumniGraduated', 'alumniGraduated', 'Year Graduated', true, '', '', 4, 12);
   echo utilsController::renderNumberInput('alumniEnrolled', 'alumniEnrolled', 'Year Enrolled', true, '', '', 4, 12);
   echo utilsController::renderPasswordInput('alumniPass', 'alumniPass', 'Temporary Password', true, '', '', 6, 12);
   echo utilsController::renderPasswordInput('alumniConfPass', 'alumniConfPass', 'Confirm Temporary Password', true, '', '', 6, 12);
   ?>
   <div class=" col-sm-12 container m-0 my-2">
-    <button type="submit" class="btn btn-success" name="register" value="alumni">Register Account</button>
+    <button type="submit" class="btn btn-success" name="register" value="alumni" action="createAlumni">Register Account</button>
   </div>
 </form>

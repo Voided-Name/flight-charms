@@ -23,7 +23,6 @@ class adminController
 
   public function index()
   {
-    guard::requireRole('Admin');
     $_SESSION['adminPage'] = "dashboard";
 
     $db = Flight::db();
@@ -49,7 +48,6 @@ class adminController
 
   public function validate()
   {
-    session_start();
     $_SESSION['adminPage'] = "validate";
 
     $alumnis = AlumniModel::getUnverifiedAlumni();
@@ -95,7 +93,6 @@ class adminController
 
   public function list()
   {
-    session_start();
     $_SESSION['adminPage'] = "list";
 
     $alumniVerified = AlumniModel::getVerifiedAlumni();
@@ -113,12 +110,10 @@ class adminController
 
     Flight::render('header', [], 'header');
     Flight::render('admin/sidebar', [], 'sidebar');
-    Flight::render('admin/create');
   }
 
   public function create()
   {
-    session_start();
     $_SESSION['adminPage'] = "create";
 
     $db = Flight::db();
@@ -140,10 +135,14 @@ class adminController
     $acadRanks = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
     $stmt = $db->prepare("SELECT * FROM companies");
-    $companies = $stmt->execute();
+    $stmt->execute();
     $companies = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-    $mapMajors = array_combine(array_column($majors, 'majorName'), array_column($majors, 'id;'));
+    bdump($majors);
+    bdump(array_column($majors, 'majorName'));
+    bdump(array_column($majors, 'major_id'));
+
+    $mapMajors = array_combine(array_column($majors, 'majorName'), array_column($majors, 'major_id'));
 
     Flight::view()->set('courses', $courses);
     Flight::view()->set('campuses', $campuses);
@@ -163,7 +162,6 @@ class adminController
 
   public function recon()
   {
-    session_start();
     $user_id = $_POST['recon_id'];
     $reason = $_POST['reason'];
     $db = Flight::db();
@@ -186,7 +184,6 @@ class adminController
 
   public function approve()
   {
-    session_start();
     $user_id = $_POST['approve_id'];
     $db = Flight::db();
     $stmt = $db->prepare("UPDATE users SET is_verified = 1 WHERE id = :user_id");
@@ -202,7 +199,6 @@ class adminController
 
   public function reject()
   {
-    session_start();
     $user_id = $_POST['delete_id'];
     $reason = $_POST['reason'];
     $dateTime = $_POST['rejected_date'];

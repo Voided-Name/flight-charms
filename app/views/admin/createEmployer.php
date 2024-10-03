@@ -29,7 +29,7 @@
     <select class="form-select" id="employerCompany" name="employerCompany">
       <?php
       foreach ($companies as $company) { ?>
-        <option value="<?php echo $company['id'] ?>"><?php echo $company['name'] ?></option>
+        <option value="<?php echo $company['company_id'] ?>"><?php echo $company['company_name'] ?></option>
       <?php
       }
       ?>

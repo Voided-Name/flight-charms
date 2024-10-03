@@ -44,35 +44,24 @@ $router->group('/dashboard', function () use ($router, $app) {
       Flight::render('admin/sidebar', [], 'sidebar');
       $app->render('admin/generate');
     }, false, 'adminhome')->addMiddleware([new layoutDefault()]);
-    $router->get('/create', function () use ($app) {
-      session_start();
-      $_SESSION['adminPage'] = "create";
-      $app->render('admin/create', ['username' => $_SESSION['username']], 'home');
-      Flight::render('header', [], 'header');
-      Flight::render('admin/sidebar', [], 'sidebar');
-      $app->render('admin/create');
-    }, false, 'adminhome')->addMiddleware([new layoutDefault()]);
-  });
+    $router->get('/create', function () use ($app) {}, false, 'adminhome')->addMiddleware([new layoutDefault()]);
+  }, [new guard('Admin')]);
 
   // Faculty Dashboard
   $router->get('/faculty', function () use ($app) {
-    guard::requireRole('Faculty');
     $app->render('faculty/home', ['username' => $_SESSION['username']]);
-  });
+  })->addMiddleware([new guard('Faculty')]);
 
   // Employer Dashboard
   $router->get('/employer', function () use ($app) {
-    guard::requireRole('Employer');
     $app->render('employer/home', ['username' => $_SESSION['username']]);
-  });
+  })->addMiddleware([new guard('Employer')]);
 
   // Alumni Dashboard
   $router->get('/alumni', function () use ($app) {
-    guard::requireRole('Alumni');
-
     Flight::render('alumni/sidebar', [], 'sidebar');
     Flight::render('alumni/home', ['username' => $_SESSION['username']], 'home');
-  }, false, 'alumnihome')->addMiddleware([new layoutDefault()]);
+  }, false, 'alumnihome')->addMiddleware([new guard('Alumni'), new layoutDefault()]);
 });
 
 $router->get('/unauthorized', function () use ($app) {

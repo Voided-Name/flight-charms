@@ -67,12 +67,14 @@ class utilsController
     </div>
     ";
   }
+  //echo utilsController::renderSelectWithOptions('alumniCourse', 'alumniCourse', 'Course', array_map(fn($course) => ['value' => $course['courseID'], 'name' => $course['courseName']], $courses), $alumniData[0]['course_id']);
+
   public static function renderSelectWithOptions($id, $name, $label, $options, $selectedValue = null)
   {
     $selectHtml = "<div class='col-md-4 col-sm-12'><label for='$id' class='form-label'>$label</label><select class='form-select' id='$id' name='$name'>";
     foreach ($options as $option) {
       $selected = ($option['value'] === $selectedValue) ? 'selected' : '';
-      $selectHtml .= "<option value='{$option[' value']}' $selected>{$option['name']}</option>";
+      $selectHtml .= "<option value='{$option['value']}' $selected>{$option['name']}</option>";
     }
     $selectHtml .= "</select></div>";
     return $selectHtml;
