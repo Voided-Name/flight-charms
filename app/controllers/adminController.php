@@ -11,6 +11,7 @@ use app\middlewares\guard;
 use app\models\AlumniModel;
 use app\models\EmployerModel;
 use app\models\FacultyModel;
+use app\controllers\baseController;
 
 class adminController
 {
@@ -112,13 +113,252 @@ class adminController
     Flight::render('admin/sidebar', [], 'sidebar');
   }
 
+  public function createAlumni()
+  {
+
+    $alumniEmail = Flight::request()->data->alumniEmail;
+    $alumniUsername = Flight::request()->data->alumniUsername;
+    $alumniFName = Flight::request()->data->alumniFName;
+    $alumniLName = Flight::request()->data->alumniLName;
+    $alumniMName = Flight::request()->data->alumniMName;
+    $alumniSuffix = Flight::request()->data->alumniSuffix;
+    $alumniRegion = Flight::request()->data->alumniRegion;
+    $alumniProvince = Flight::request()->data->alumniProvince;
+    $alumniMunicipality = Flight::request()->data->alumniMunicipality;
+    $alumniBarangay = Flight::request()->data->alumniBarangay;
+    $alumniStAdd = Flight::request()->data->alumniStAdd;
+    $alumniCPNumber = Flight::request()->data->alumniCPNumber;
+    $alumniSex = Flight::request()->data->alumniSex;
+    $alumniBDate = Flight::request()->data->alumniBDate;
+    $alumniStudId = Flight::request()->data->alumniStudId;
+    $alumniCourse = Flight::request()->data->alumniCourse;
+    $alumniMajor = Flight::request()->data->alumniMajor;
+    $alumniCampus = Flight::request()->data->alumniCampus;
+    $alumniGraduated = Flight::request()->data->alumniGraduated;
+    $alumniEnrolled = Flight::request()->data->alumniEnrolled;
+    $alumniPass = md5(Flight::request()->data->alumniPass);
+    $alumniConfPass = md5(Flight::request()->data->alumniConfPass);
+
+    if ($alumniMajor == "N/A") {
+      $alumniMajor = 17;
+    }
+
+    // errs
+    $err = false;
+    $alumniEmailExists = false;
+    $alumniUsernameExists = false;
+    $alumniPassDifferent = false;
+
+    if (baseController::checkEmailExists($alumniEmail)) {
+      $alumniEmailExists = true;
+      if (!$err) {
+        $err = true;
+      }
+    }
+
+    if (baseController::checkUsernameExists($alumniUsername)) {
+      $alumniUsernameExists = true;
+      if (!$err) {
+        $err = true;
+      }
+    }
+
+    if ($alumniPass != $alumniConfPass) {
+      $alumniPassDifferent = true;
+    }
+
+    if ($err) {
+      $_SESSION['alumniEmailExists'] = $alumniEmailExists;
+      $_SESSION['alumniUsernameExists'] = $alumniUsernameExists;
+      $_SESSION['alumniPassDifferent'] = $alumniPassDifferent;
+      $_SESSION['createInvalid'] = true;
+
+      Flight::redirect(Flight::request()->base . '/dashboard/admin/create');
+      exit();
+    }
+
+    $created_at = date('Y-m-d H:i:s');
+    $db = Flight::db();
+    $stmt = $db->prepare('INSERT INTO users (username, password, role, is_verified, created_at) VALUES (:alumniUsername, :alumniPass, 1, 1, :created_at)');
+    $status = $stmt->execute(['alumniUsername' => $alumniUsername, 'alumniPass' => $alumniPass, 'created_at' => $created_at]);
+
+    if ($status) {
+      $userId = $db->lastInsertId();
+      $stmt = $db->prepare('INSERT INTO userdetails (user_id, email_address, contact_number, first_name, middle_name, last_name, suffix, birth_date, sex, region, province, city, barangay, street_add) VALUES (:user_id, :alumniEmail, :alumniCPNumber, :alumniFName, :alumniMName, :alumniLName, :alumniSuffix, :alumniBDate, :alumniSex, :alumniRegion, :alumniProvince, :alumniMunicipality, :alumniBarangay, :alumniStAdd)');
+      $status = $stmt->execute(['user_id' => $userId, 'alumniEmail' => $alumniEmail, 'alumniCPNumber' => $alumniCPNumber, 'alumniFName' => $alumniFName, 'alumniMName' => $alumniMName, 'alumniLName' => $alumniLName, "alumniSuffix" => $alumniSuffix, "alumniBDate" => $alumniBDate, "alumniSex" => $alumniSex, "alumniRegion" => $alumniRegion, "alumniProvince" => $alumniProvince, "alumniMunicipality" => $alumniMunicipality, "alumniBarangay" => $alumniBarangay, "alumniStAdd" => $alumniStAdd]);
+      $stmt = $db->prepare('INSERT INTO alumni_graduated_course (user_id, studnum, course_id, major_id, campus, year_started, year_graduated) VALUES (:user_id, :alumniStudId, :alumniCourse, :alumniMajor, :alumniCampus, :alumniEnrolled, :alumniGraduated)');
+      $status = $stmt->execute(['user_id' => $userId, 'alumniStudId' => $alumniStudId, 'alumniCourse' => $alumniCourse, 'alumniMajor' => $alumniMajor, 'alumniCampus' => $alumniCampus, 'alumniEnrolled' => $alumniEnrolled, "alumniGraduated" => $alumniGraduated]);
+    }
+
+    $_SESSION["createValid"] = true;
+
+    Flight::redirect(Flight::request()->base . '/dashboard/admin/create');
+  }
+
+  public function createEmployer()
+  {
+    $employerEmail = Flight::request()->data->employerEmail;
+    $employerUsername = Flight::request()->data->employerUsername;
+    $employerFName = Flight::request()->data->employerFName;
+    $employerLName = Flight::request()->data->employerLName;
+    $employerMName = Flight::request()->data->employerMName;
+    $employerSuffix = Flight::request()->data->employerSuffix;
+    $employerRegion = Flight::request()->data->employerRegion;
+    $employerProvince = Flight::request()->data->employerProvince;
+    $employerMunicipality = Flight::request()->data->employerMunicipality;
+    $employerBarangay = Flight::request()->data->employerBarangay;
+    $employerStAdd = Flight::request()->data->employerStAdd;
+    $employerCPNumber = Flight::request()->data->employerCPNumber;
+    $employerSex = Flight::request()->data->employerSex;
+    $employerBDate = Flight::request()->data->employerBDate;
+    $employerPass = md5(Flight::request()->data->employerPass);
+    $employerConfPass = md5(Flight::request()->data->employerConfPass);
+
+    $employerCompany = Flight::request()->data->employerCompany;
+    $employerID = Flight::request()->data->employerID;
+    $employerPosition = Flight::request()->data->employerPosition;
+
+    $err = false;
+    $employerEmailExists = false;
+    $employerUsernameExists = false;
+    $employerPassDifferent = false;
+
+    if (baseController::checkEmailExists($employerEmail)) {
+      $employerEmailExists = true;
+      if (!$err) {
+        $err = true;
+      }
+    }
+
+    if (baseController::checkUsernameExists($employerUsername)) {
+      $employerUsernameExists = true;
+      if (!$err) {
+        $err = true;
+      }
+    }
+
+    if ($employerPass != $employerConfPass) {
+      $employerPassDifferent = true;
+    }
+
+    if ($err) {
+      $_SESSION['employerEmailExists'] = $employerEmailExists;
+      $_SESSION['employerUsernameExists'] = $employerUsernameExists;
+      $_SESSION['employerPassDifferent'] = $employerPassDifferent;
+      $_SESSION['createInvalid'] = true;
+
+      Flight::redirect(Flight::request()->base . '/dashboard/admin/create');
+      exit();
+    }
+
+    $db = Flight::db();
+
+    if ($employerCompany == 0) {
+      $employerCompany = Flight::request()->data->employerCompanySTR;
+      $stmt = $db->prepare('INSERT INTO companies (company_name) VALUES (:company_name)');
+      $status = $stmt->execute(['company_name' => $employerCompany]);
+      $employerCompany = $db->lastInsertId;
+    }
+
+    $created_at = date('Y-m-d H:i:s');
+    $stmt = $db->prepare('INSERT INTO users (username, password, role, is_verified, created_at) VALUES (:employerUsername, :employerPass, 2, 1, :created_at)');
+    $status = $stmt->execute(['employerUsername' => $employerUsername, 'employerPass' => $employerPass, 'created_at' => $created_at]);
+
+    if ($status) {
+      $userId = $db->lastInsertId();
+      $stmt = $db->prepare('INSERT INTO userdetails (user_id, email_address, contact_number, first_name, middle_name, last_name, suffix, birth_date, sex, region, province, city, barangay, street_add) VALUES (:user_id, :employerEmail, :employerCPNumber, :employerFName, :employerMName, :employerLName, :employerSuffix, :employerBDate, :employerSex, :employerRegion, :employerProvince, :employerMunicipality, :employerBarangay, :employerStAdd)');
+      $status = $stmt->execute(['user_id' => $userId, 'employerEmail' => $employerEmail, 'employerCPNumber' => $employerCPNumber, 'employerFName' => $employerFName, 'employerMName' => $employerMName, 'employerLName' => $employerLName, "employerSuffix" => $employerSuffix, "employerBDate" => $employerBDate, "employerSex" => $employerSex, "employerRegion" => $employerRegion, "employerProvince" => $employerProvince, "employerMunicipality" => $employerMunicipality, "employerBarangay" => $employerBarangay, "employerStAdd" => $employerStAdd]);
+      $stmt = $db->prepare('INSERT INTO employer_users (user_id, employer_num, company_id, company_position) VALUES (:user_id, :employerID, :employerCompany, :employerPosition)');
+      $status = $stmt->execute(['user_id' => $userId, 'employerID' => $employerID, 'employerCompany' => $employerCompany, 'employerPosition' => $employerPosition]);
+    }
+
+    $_SESSION['createValid'] = true;
+
+    Flight::redirect(Flight::request()->base . '/dashboard/admin/create');
+  }
+
+  public function createFaculty()
+  {
+    $facultyEmail = Flight::request()->data->facultyEmail;
+    $facultyUsername = Flight::request()->data->facultyUsername;
+    $facultyFName = Flight::request()->data->facultyFName;
+    $facultyLName = Flight::request()->data->facultyLName;
+    $facultyMName = Flight::request()->data->facultyMName;
+    $facultySuffix = Flight::request()->data->facultySuffix;
+    $facultyRegion = Flight::request()->data->facultyRegion;
+    $facultyProvince = Flight::request()->data->facultyProvince;
+    $facultyMunicipality = Flight::request()->data->facultyMunicipality;
+    $facultyBarangay = Flight::request()->data->facultyBarangay;
+    $facultyStAdd = Flight::request()->data->facultyStAdd;
+    $facultyCPNumber = Flight::request()->data->facultyCPNumber;
+    $facultySex = Flight::request()->data->facultySex;
+    $facultyBDate = Flight::request()->data->facultyBDate;
+    $facultyPass = md5(Flight::request()->data->facultyPass);
+    $facultyConfPass = md5(Flight::request()->data->facultyConfPass);
+
+    $facultyRank = Flight::request()->data->facultyRank;
+    $facultyCampus = Flight::request()->data->facultyCampus;
+    $facultyID = Flight::request()->data->facultyID;
+
+    $err = false;
+    $facultyEmailExists = false;
+    $facultyUsernameExists = false;
+    $facultyPassDifferent = false;
+
+    if (baseController::checkEmailExists($facultyEmail)) {
+      $facultyEmailExists = true;
+      if (!$err) {
+        $err = true;
+      }
+    }
+
+    if (baseController::checkUsernameExists($facultyUsername)) {
+      $facultyUsernameExists = true;
+      if (!$err) {
+        $err = true;
+      }
+    }
+
+    if ($facultyPass != $facultyConfPass) {
+      $facultyPassDifferent = true;
+    }
+
+    if ($err) {
+      $_SESSION['facultyEmailExists'] = $facultyEmailExists;
+      $_SESSION['facultyUsernameExists'] = $facultyUsernameExists;
+      $_SESSION['facultyPassDifferent'] = $facultyPassDifferent;
+      $_SESSION['createInvalid'] = true;
+
+      Flight::redirect(Flight::request()->base . '/dashboard/admin/create');
+      exit();
+    }
+
+    $db = Flight::db();
+
+    $created_at = date('Y-m-d H:i:s');
+    $stmt = $db->prepare('INSERT INTO users (username, password, role, is_verified, created_at) VALUES (:facultyUsername, :facultyPass, 3, 1, :created_at)');
+    $status = $stmt->execute(['facultyUsername' => $facultyUsername, 'facultyPass' => $facultyPass, 'created_at' => $created_at]);
+
+    if ($status) {
+      $userId = $db->lastInsertId();
+      $stmt = $db->prepare('INSERT INTO userdetails (user_id, email_address, contact_number, first_name, middle_name, last_name, suffix, birth_date, sex, region, province, city, barangay, street_add) VALUES (:user_id, :facultyEmail, :facultyCPNumber, :facultyFName, :facultyMName, :facultyLName, :facultySuffix, :facultyBDate, :facultySex, :facultyRegion, :facultyProvince, :facultyMunicipality, :facultyBarangay, :facultyStAdd)');
+      $status = $stmt->execute(['user_id' => $userId, 'facultyEmail' => $facultyEmail, 'facultyCPNumber' => $facultyCPNumber, 'facultyFName' => $facultyFName, 'facultyMName' => $facultyMName, 'facultyLName' => $facultyLName, "facultySuffix" => $facultySuffix, "facultyBDate" => $facultyBDate, "facultySex" => $facultySex, "facultyRegion" => $facultyRegion, "facultyProvince" => $facultyProvince, "facultyMunicipality" => $facultyMunicipality, "facultyBarangay" => $facultyBarangay, "facultyStAdd" => $facultyStAdd]);
+      $stmt = $db->prepare('INSERT INTO faculty (user_id, employee_num, campus_id, acadrank_id) VALUES (:user_id, :facultyID, :facultyCampus, :facultyRank)');
+      $status = $stmt->execute(['user_id' => $userId, 'facultyID' => $facultyID, 'facultyCampus' => $facultyCampus, 'facultyRank' => $facultyRank]);
+    }
+
+    $_SESSION['createValid'] = true;
+
+    Flight::redirect(Flight::request()->base . '/dashboard/admin/create');
+  }
+
   public function create()
   {
     $_SESSION['adminPage'] = "create";
 
     $db = Flight::db();
 
-    $stmt = $db->prepare("SELECT * FROM course");
+    $stmt = $db->prepare("SELECT * FROM courses");
     $stmt->execute();
     $courses = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -139,6 +379,7 @@ class adminController
     $companies = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
     bdump($majors);
+    bdump($courses);
     bdump(array_column($majors, 'majorName'));
     bdump(array_column($majors, 'major_id'));
 
@@ -218,6 +459,30 @@ class adminController
     } else {
       $_SESSION['rejected'] = false;
       Flight::redirect(Flight::request()->base . '/dashboard/admin/validate');
+    }
+  }
+
+  public function checkEmail()
+  {
+    $fieldName = $_POST['fieldName'];
+
+    $email = $_POST[$fieldName];
+    $exists = baseController::checkEmailExists($email);
+
+    if ($exists) {
+      echo "exists";
+    }
+  }
+
+  public function checkUsername()
+  {
+    $fieldName = $_POST['fieldName'];
+
+    $email = $_POST[$fieldName];
+    $exists = baseController::checkUsernameExists($email);
+
+    if ($exists) {
+      echo "exists";
     }
   }
 }

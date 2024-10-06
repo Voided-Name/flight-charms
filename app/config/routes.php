@@ -3,6 +3,7 @@
 use app\controllers\ApiExampleController;
 use app\controllers\baseController;
 use app\controllers\adminController;
+use app\controllers\alumniController;
 use app\middlewares\guard;
 use app\middlewares\layoutDefault;
 use flight\Engine;
@@ -30,12 +31,17 @@ $router->group('/dashboard', function () use ($router, $app) {
   // Admin Dashboard
   $router->group('/admin', function () use ($router, $app) {
     $router->get('/', [adminController::class, 'index'], false, 'adminhome')->addMiddleware([new layoutDefault()]);
+    $router->post('/checkEmail', [adminController::class, 'checkEmail'], false, 'adminCheckEmail');
+    $router->post('/checkUsername', [adminController::class, 'checkUsername'], false, 'adminCheckUsername');
     $router->get('/validate', [adminController::class, 'validate'], false, 'adminValidate')->addMiddleware([new layoutDefault()]);
     $router->post('/approve', [adminController::class, 'approve']);
     $router->post('/reject', [adminController::class, 'reject']);
     $router->post('/recon', [adminController::class, 'recon']);
     $router->get('/list', [adminController::class, 'list'], false, 'adminList')->addMiddleware([new layoutDefault()]);
     $router->get('/create', [adminController::class, 'create'], false, 'adminCreate')->addMiddleware([new layoutDefault()]);
+    $router->post('/createAlumni', [adminController::class, 'createAlumni'], false, 'adminCreateAlumni');
+    $router->post('/createEmployer', [adminController::class, 'createEmployer'], false, 'adminCreateEmployer');
+    $router->post('/createFaculty', [adminController::class, 'createFaculty'], false, 'adminCreateFaculty');
     $router->get('/generate', function () use ($app) {
       session_start();
       $_SESSION['adminPage'] = "generate";
@@ -57,11 +63,11 @@ $router->group('/dashboard', function () use ($router, $app) {
     $app->render('employer/home', ['username' => $_SESSION['username']]);
   })->addMiddleware([new guard('Employer')]);
 
-  // Alumni Dashboard
-  $router->get('/alumni', function () use ($app) {
-    Flight::render('alumni/sidebar', [], 'sidebar');
-    Flight::render('alumni/home', ['username' => $_SESSION['username']], 'home');
-  }, false, 'alumnihome')->addMiddleware([new guard('Alumni'), new layoutDefault()]);
+
+  $router->group('/alumni', function () use ($router, $app) {
+    $router->get('/', [alumniController::class, 'index'], false, 'alumnihome')->addMiddleware([new layoutDefault()]);
+    $router->get('/awards', [alumniController::class, 'awards'], false, 'alumniAwards')->addMiddleware([new layoutDefault()]);
+  }, [new guard('Alumni')]);
 });
 
 $router->get('/unauthorized', function () use ($app) {

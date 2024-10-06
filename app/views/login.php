@@ -126,7 +126,7 @@ if (session_status() == PHP_SESSION_NONE) {
           </div>
         </div>
         <button type="submit" id="loginBtn" name="loginBtn" class="btn btn-primary">Login</button>
-        <a href="register.php" class="link-underline-opacity-10 link-dark link-underline-opacity-50-hover text-center">Sign Up Instead</a>
+        <a href="<?= Flight::request()->base ?>/register" class="link-underline-opacity-10 link-dark link-underline-opacity-50-hover text-center">Sign Up Instead</a>
       </form>
     </div>
     <div class="container loginGlobalImageContainer m-0 p-0 rounded-end d-none d-lg-block">

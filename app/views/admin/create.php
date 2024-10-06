@@ -481,10 +481,35 @@ $regionInformation['NCR'] = 'NCR';
 //d($err);
 ?>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  <?php
-  if ($userNameErr || $emailInvalid || $emailErrExists || $differentPassword) {
+  <?php if (isset($_SESSION['createValid'])) {
+    if ($_SESSION['createValid']) {
+      $_SESSION['createValid'] = false;
   ?>
+      Swal.fire({
+        icon: 'success',
+        title: 'Account Created',
+        text: 'Check Accounts List'
+      });
+    <?php
+    }
+  }
+  if (isset($_SESSION['createInvalid'])) {
+    if ($_SESSION['createInvalid']) {
+      $_SESSION['createInvalid'] = false;
+    ?>
+      Swal.fire({
+        icon: 'error',
+        title: 'Account Not Created',
+        text: 'Something Went Wrong!'
+      });
+    <?php
+    }
+  }
+  if ($userNameErr || $emailInvalid || $emailErrExists || $differentPassword) {
+    ?>
     Swal.fire({
       icon: 'error',
       title: 'Error',
@@ -613,7 +638,8 @@ $regionInformation['NCR'] = 'NCR';
       });
     });
 
-    $.getJSON("assets/locations.json", function(result) {
+
+    $.getJSON('<?php echo (Flight::request()->base) ?>/assets/locations.json', function(result) {
       $.each(result, function(i, field) {
         userRoles.forEach(function(role, index) {
           $('#' + role + 'Region').append(`<option value="${i}">
@@ -638,7 +664,7 @@ $regionInformation['NCR'] = 'NCR';
     });
 
     function getProvinces(region_name, role) {
-      $.getJSON("assets/locations.json", function(result) {
+      $.getJSON('<?php echo (Flight::request()->base) ?>/assets/locations.json', function(result) {
         $.each(result[region_name].province_list, function(key, value) {
           $('#' + role + 'Province').append(`<option value="${key}">
                                        ${key}
@@ -657,7 +683,7 @@ $regionInformation['NCR'] = 'NCR';
     });
 
     function getMunicipality(region_name, province_name, role) {
-      $.getJSON("assets/locations.json", function(result) {
+      $.getJSON('<?php echo (Flight::request()->base) ?>/assets/locations.json', function(result) {
         // console.log(result[region_name].province_list[province_name]);
         $.each(result[region_name].province_list[province_name].municipality_list, function(key, value) {
           // console.log(key);
@@ -678,7 +704,7 @@ $regionInformation['NCR'] = 'NCR';
     });
 
     function getBarangay(region_name, province_name, municipality_name, role) {
-      $.getJSON("assets/locations.json", function(result) {
+      $.getJSON('<?php echo (Flight::request()->base) ?>/assets/locations.json', function(result) {
         // console.log(result[region_name].province_list[province_name].municipality_list[municipality_name].barangay_list);
         $.each(result[region_name].province_list[province_name].municipality_list[municipality_name].barangay_list, function(key, value) {
           // console.log(key);
@@ -744,4 +770,147 @@ $regionInformation['NCR'] = 'NCR';
   });
 
   changeTab();
+
+
+  function removeError($el) {
+    $el.classList.remove("err");
+  }
+
+  document.body.addEventListener('htmx:afterRequest', function(event) {
+    // Get the response text
+    const responseText = event.detail.xhr.responseText;
+
+    // Get the URL of the request
+    const requestURL = event.detail.xhr.responseURL;
+
+    // Get the element that triggered the request
+    const triggeringElement = event.detail.elt;
+
+    if (triggeringElement.id == "alumniEmail") {
+      if (responseText == "exists") {
+        triggeringElement.classList.add("err");
+        Swal.fire({
+          icon: 'error',
+          title: 'Email Exists!',
+          text: 'Login if you are already a user'
+        });
+      }
+    } else if (triggeringElement.id == "alumniUsername") {
+      if (responseText == "exists") {
+        triggeringElement.classList.add("err");
+        Swal.fire({
+          icon: 'error',
+          title: 'Username Exists!',
+          text: 'Login if you are already a user'
+        });
+      }
+    } else if (triggeringElement.id == "employerEmail") {
+      if (responseText == "exists") {
+        triggeringElement.classList.add("err");
+        Swal.fire({
+          icon: 'error',
+          title: 'Email Exists!',
+          text: 'Login if you are already a user'
+        });
+      }
+    } else if (triggeringElement.id == "employerUsername") {
+      if (responseText == "exists") {
+        triggeringElement.classList.add("err");
+        Swal.fire({
+          icon: 'error',
+          title: 'Username Exists!',
+          text: 'Login if you are already a user'
+        });
+      }
+    } else if (triggeringElement.id == "facultyEmail") {
+      if (responseText == "exists") {
+        triggeringElement.classList.add("err");
+        Swal.fire({
+          icon: 'error',
+          title: 'Email Exists!',
+          text: 'Login if you are already a user'
+        });
+      }
+    } else if (triggeringElement.id == "facultyUsername") {
+      if (responseText == "exists") {
+        triggeringElement.classList.add("err");
+        Swal.fire({
+          icon: 'error',
+          title: 'Username Exists!',
+          text: 'Login if you are already a user'
+        });
+      }
+    }
+
+
+
+  });
+
+  function validateAlumniPasswords(event) {
+    const password = document.getElementById('alumniPass').value;
+    const confirmPassword = document.getElementById('alumniConfPass').value;
+
+    if (password !== confirmPassword) {
+      // Prevent the form submission
+      event.preventDefault();
+
+      // Display an alert (can use SweetAlert for a better UI)
+      Swal.fire({
+        icon: 'error',
+        title: 'Passwords do not match',
+        text: 'Please make sure the passwords are identical.'
+      });
+
+      return false; // Prevent form from submitting
+    }
+
+    // Allow form submission if passwords match
+    return true;
+  }
+
+  function validateEmployerPasswords(event) {
+    const password = document.getElementById('employerPass').value;
+    const confirmPassword = document.getElementById('employerConfPass').value;
+
+    if (password !== confirmPassword) {
+      // Prevent the form submission
+      alert(password);
+      alert(confirmPassword);
+      event.preventDefault();
+
+      // Display an alert (can use SweetAlert for a better UI)
+      Swal.fire({
+        icon: 'error',
+        title: 'Passwords do not match',
+        text: 'Please make sure the passwords are identical.'
+      });
+
+      return false; // Prevent form from submitting
+    }
+
+    // Allow form submission if passwords match
+    return true;
+  }
+
+  function validateFacultyPasswords(event) {
+    const password = document.getElementById('facultyPass').value;
+    const confirmPassword = document.getElementById('facultyConfPass').value;
+
+    if (password !== confirmPassword) {
+      // Prevent the form submission
+      event.preventDefault();
+
+      // Display an alert (can use SweetAlert for a better UI)
+      Swal.fire({
+        icon: 'error',
+        title: 'Passwords do not match',
+        text: 'Please make sure the passwords are identical.'
+      });
+
+      return false; // Prevent form from submitting
+    }
+
+    // Allow form submission if passwords match
+    return true;
+  }
 </script>

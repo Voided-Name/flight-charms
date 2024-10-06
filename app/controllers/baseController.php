@@ -246,4 +246,26 @@ class baseController
 
     return $stmt->fetchAll(\PDO::FETCH_ASSOC);
   }
+
+  public static function checkEmailExists($email)
+  {
+    $db = Flight::db();
+
+    $stmt = $db->prepare("SELECT * FROM userdetails WHERE email_address = :email");
+    $stmt->execute(['email' => $email]);
+    $status = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    return $status;
+  }
+
+  public static function checkUsernameExists($username)
+  {
+    $db = Flight::db();
+
+    $stmt = $db->prepare("SELECT * FROM users WHERE username = :username");
+    $stmt->execute(['username' => $username]);
+    $status = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    return $status;
+  }
 }

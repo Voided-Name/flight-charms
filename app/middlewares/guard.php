@@ -12,7 +12,7 @@ class guard
     if (session_status() == PHP_SESSION_NONE) {
       session_start(); // Ensure session is started
     }
-    if (!isset($_SESSION['rolename']) || $_SESSION['rolename'] != $requiredRole) {
+    if (!isset($_SESSION['rolename']) || $_SESSION['rolename'] != $this->requiredRole) {
       // Redirect to unauthorized page or login if role doesn't match
       Flight::redirect(Flight::request()->base . '/unauthorized');
       exit();
