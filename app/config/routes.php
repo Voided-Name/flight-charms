@@ -4,6 +4,7 @@ use app\controllers\ApiExampleController;
 use app\controllers\baseController;
 use app\controllers\adminController;
 use app\controllers\alumniController;
+use app\controllers\employerController;
 use app\middlewares\guard;
 use app\middlewares\layoutDefault;
 use flight\Engine;
@@ -59,14 +60,30 @@ $router->group('/dashboard', function () use ($router, $app) {
   })->addMiddleware([new guard('Faculty')]);
 
   // Employer Dashboard
-  $router->get('/employer', function () use ($app) {
-    $app->render('employer/home', ['username' => $_SESSION['username']]);
-  })->addMiddleware([new guard('Employer')]);
+
+  $router->group('/employer', function () use ($router, $app) {
+    $router->get('/', [employerController::class, 'index'], false, 'employerHome')->addMiddleware([new layoutDefault()]);
+    $router->get('/createVacancy', [employerController::class, 'createVacancy', false, 'employerCreateVacancy'])->addMiddleware([new layoutDefault()]);
+    $router->post('/createVacancySubmit', [employerController::class, 'createVacancySubmit', false, 'employerCreateVacancySubmit']);
+    $router->get('/jobVacancies', [employerController::class, 'jobVacancies', false, 'employerJobVacancies'])->addMiddleware([new layoutDefault()]);
+    $router->get('/jobVacanciesEdit', [employerController::class, 'jobVacanciesEdit', false, 'employerJobVacanciesEdit'])->addMiddleware([new layoutDefault()]);
+    $router->post('/editJobVacancy', [employerController::class, 'editJobVacancy', false, 'employerEditJobVacancy']);
+    $router->get('/viewApps', [employerController::class, 'viewApps'], false, 'employerViewApps')->addMiddleware([new layoutDefault()]);
+    $router->get('/deleteVacancy', [employerController::class, 'deleteVacancy', false, 'employerDeleteVacancy']);
+    $router->get('/allVacancies', [baseController::class, 'allVacancies'], false, 'employerViewVacancies')->addMiddleware([new layoutDefault()]);
+  }, [new guard('Employer')]);
 
 
   $router->group('/alumni', function () use ($router, $app) {
     $router->get('/', [alumniController::class, 'index'], false, 'alumnihome')->addMiddleware([new layoutDefault()]);
     $router->get('/awards', [alumniController::class, 'awards'], false, 'alumniAwards')->addMiddleware([new layoutDefault()]);
+    $router->post('/addAward', [alumniController::class, 'addAward', false, 'alumniAddAward']);
+    $router->post('/editAward', [alumniController::class, 'editAward', false, 'alumniEditAward']);
+    $router->post('/deleteAward', [alumniController::class, 'deleteAward', false, 'alumniDeleteAward']);
+    $router->get('/workExp', [alumniController::class, 'workExp'], false, 'alumniWorkExp')->addMiddleware([new layoutDefault()]);
+    $router->post('/addWorkExp', [alumniController::class, 'addWorkExp', false, 'alumniAddWorkExp']);
+    $router->post('/editWorkExp', [alumniController::class, 'editWorkExp', false, 'alumniEditWorkExp']);
+    $router->post('/deleteWorkExp', [alumniController::class, 'deleteWorkExp', false, 'alumniDeleteWorkExp']);
   }, [new guard('Alumni')]);
 });
 

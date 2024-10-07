@@ -116,28 +116,28 @@ class adminController
   public function createAlumni()
   {
 
-    $alumniEmail = Flight::request()->data->alumniEmail;
-    $alumniUsername = Flight::request()->data->alumniUsername;
-    $alumniFName = Flight::request()->data->alumniFName;
-    $alumniLName = Flight::request()->data->alumniLName;
-    $alumniMName = Flight::request()->data->alumniMName;
-    $alumniSuffix = Flight::request()->data->alumniSuffix;
-    $alumniRegion = Flight::request()->data->alumniRegion;
-    $alumniProvince = Flight::request()->data->alumniProvince;
-    $alumniMunicipality = Flight::request()->data->alumniMunicipality;
-    $alumniBarangay = Flight::request()->data->alumniBarangay;
-    $alumniStAdd = Flight::request()->data->alumniStAdd;
-    $alumniCPNumber = Flight::request()->data->alumniCPNumber;
-    $alumniSex = Flight::request()->data->alumniSex;
-    $alumniBDate = Flight::request()->data->alumniBDate;
-    $alumniStudId = Flight::request()->data->alumniStudId;
-    $alumniCourse = Flight::request()->data->alumniCourse;
-    $alumniMajor = Flight::request()->data->alumniMajor;
-    $alumniCampus = Flight::request()->data->alumniCampus;
-    $alumniGraduated = Flight::request()->data->alumniGraduated;
-    $alumniEnrolled = Flight::request()->data->alumniEnrolled;
-    $alumniPass = md5(Flight::request()->data->alumniPass);
-    $alumniConfPass = md5(Flight::request()->data->alumniConfPass);
+    $alumniEmail = strip_tags(Flight::request()->data->alumniEmail);
+    $alumniUsername = strip_tags(Flight::request()->data->alumniUsername);
+    $alumniFName = strip_tags(Flight::request()->data->alumniFName);
+    $alumniLName = strip_tags(Flight::request()->data->alumniLName);
+    $alumniMName = strip_tags(Flight::request()->data->alumniMName);
+    $alumniSuffix = strip_tags(Flight::request()->data->alumniSuffix);
+    $alumniRegion = strip_tags(Flight::request()->data->alumniRegion);
+    $alumniProvince = strip_tags(Flight::request()->data->alumniProvince);
+    $alumniMunicipality = strip_tags(Flight::request()->data->alumniMunicipality);
+    $alumniBarangay = strip_tags(Flight::request()->data->alumniBarangay);
+    $alumniStAdd = strip_tags(Flight::request()->data->alumniStAdd);
+    $alumniCPNumber = strip_tags(Flight::request()->data->alumniCPNumber);
+    $alumniSex = strip_tags(Flight::request()->data->alumniSex);
+    $alumniBDate = strip_tags(Flight::request()->data->alumniBDate);
+    $alumniStudId = strip_tags(Flight::request()->data->alumniStudId);
+    $alumniCourse = strip_tags(Flight::request()->data->alumniCourse);
+    $alumniMajor = strip_tags(Flight::request()->data->alumniMajor);
+    $alumniCampus = strip_tags(Flight::request()->data->alumniCampus);
+    $alumniGraduated = strip_tags(Flight::request()->data->alumniGraduated);
+    $alumniEnrolled = strip_tags(Flight::request()->data->alumniEnrolled);
+    $alumniPass = md5(strip_tags(Flight::request()->data->alumniPass));
+    $alumniConfPass = md5(strip_tags(Flight::request()->data->alumniConfPass));
 
     if ($alumniMajor == "N/A") {
       $alumniMajor = 17;
@@ -197,26 +197,26 @@ class adminController
 
   public function createEmployer()
   {
-    $employerEmail = Flight::request()->data->employerEmail;
-    $employerUsername = Flight::request()->data->employerUsername;
-    $employerFName = Flight::request()->data->employerFName;
-    $employerLName = Flight::request()->data->employerLName;
-    $employerMName = Flight::request()->data->employerMName;
-    $employerSuffix = Flight::request()->data->employerSuffix;
-    $employerRegion = Flight::request()->data->employerRegion;
-    $employerProvince = Flight::request()->data->employerProvince;
-    $employerMunicipality = Flight::request()->data->employerMunicipality;
-    $employerBarangay = Flight::request()->data->employerBarangay;
-    $employerStAdd = Flight::request()->data->employerStAdd;
-    $employerCPNumber = Flight::request()->data->employerCPNumber;
-    $employerSex = Flight::request()->data->employerSex;
-    $employerBDate = Flight::request()->data->employerBDate;
-    $employerPass = md5(Flight::request()->data->employerPass);
-    $employerConfPass = md5(Flight::request()->data->employerConfPass);
+    $employerEmail = strip_tags(Flight::request()->data->employerEmail);
+    $employerUsername = strip_tags(Flight::request()->data->employerUsername);
+    $employerFName = strip_tags(Flight::request()->data->employerFName);
+    $employerLName = strip_tags(Flight::request()->data->employerLName);
+    $employerMName = strip_tags(Flight::request()->data->employerMName);
+    $employerSuffix = strip_tags(Flight::request()->data->employerSuffix);
+    $employerRegion = strip_tags(Flight::request()->data->employerRegion);
+    $employerProvince = strip_tags(Flight::request()->data->employerProvince);
+    $employerMunicipality = strip_tags(Flight::request()->data->employerMunicipality);
+    $employerBarangay = strip_tags(Flight::request()->data->employerBarangay);
+    $employerStAdd = strip_tags(Flight::request()->data->employerStAdd);
+    $employerCPNumber = strip_tags(Flight::request()->data->employerCPNumber);
+    $employerSex = strip_tags(Flight::request()->data->employerSex);
+    $employerBDate = strip_tags(Flight::request()->data->employerBDate);
+    $employerPass = md5(strip_tags(Flight::request()->data->employerPass));
+    $employerConfPass = md5(strip_tags(Flight::request()->data->employerConfPass));
 
-    $employerCompany = Flight::request()->data->employerCompany;
-    $employerID = Flight::request()->data->employerID;
-    $employerPosition = Flight::request()->data->employerPosition;
+    $employerCompany = strip_tags(Flight::request()->data->employerCompany);
+    $employerID = strip_tags(Flight::request()->data->employerID);
+    $employerPosition = strip_tags(Flight::request()->data->employerPosition);
 
     $err = false;
     $employerEmailExists = false;
@@ -279,26 +279,26 @@ class adminController
 
   public function createFaculty()
   {
-    $facultyEmail = Flight::request()->data->facultyEmail;
-    $facultyUsername = Flight::request()->data->facultyUsername;
-    $facultyFName = Flight::request()->data->facultyFName;
-    $facultyLName = Flight::request()->data->facultyLName;
-    $facultyMName = Flight::request()->data->facultyMName;
-    $facultySuffix = Flight::request()->data->facultySuffix;
-    $facultyRegion = Flight::request()->data->facultyRegion;
-    $facultyProvince = Flight::request()->data->facultyProvince;
-    $facultyMunicipality = Flight::request()->data->facultyMunicipality;
-    $facultyBarangay = Flight::request()->data->facultyBarangay;
-    $facultyStAdd = Flight::request()->data->facultyStAdd;
-    $facultyCPNumber = Flight::request()->data->facultyCPNumber;
-    $facultySex = Flight::request()->data->facultySex;
-    $facultyBDate = Flight::request()->data->facultyBDate;
-    $facultyPass = md5(Flight::request()->data->facultyPass);
-    $facultyConfPass = md5(Flight::request()->data->facultyConfPass);
+    $facultyEmail = strip_tags(Flight::request()->data->facultyEmail);
+    $facultyUsername = strip_tags(Flight::request()->data->facultyUsername);
+    $facultyFName = strip_tags(Flight::request()->data->facultyFName);
+    $facultyLName = strip_tags(Flight::request()->data->facultyLName);
+    $facultyMName = strip_tags(Flight::request()->data->facultyMName);
+    $facultySuffix = strip_tags(Flight::request()->data->facultySuffix);
+    $facultyRegion = strip_tags(Flight::request()->data->facultyRegion);
+    $facultyProvince = strip_tags(Flight::request()->data->facultyProvince);
+    $facultyMunicipality = strip_tags(Flight::request()->data->facultyMunicipality);
+    $facultyBarangay = strip_tags(Flight::request()->data->facultyBarangay);
+    $facultyStAdd = strip_tags(Flight::request()->data->facultyStAdd);
+    $facultyCPNumber = strip_tags(Flight::request()->data->facultyCPNumber);
+    $facultySex = strip_tags(Flight::request()->data->facultySex);
+    $facultyBDate = strip_tags(Flight::request()->data->facultyBDate);
+    $facultyPass = md5(strip_tags(Flight::request()->data->facultyPass));
+    $facultyConfPass = md5(strip_tags(Flight::request()->data->facultyConfPass));
 
-    $facultyRank = Flight::request()->data->facultyRank;
-    $facultyCampus = Flight::request()->data->facultyCampus;
-    $facultyID = Flight::request()->data->facultyID;
+    $facultyRank = strip_tags(Flight::request()->data->facultyRank);
+    $facultyCampus = strip_tags(Flight::request()->data->facultyCampus);
+    $facultyID = strip_tags(Flight::request()->data->facultyID);
 
     $err = false;
     $facultyEmailExists = false;

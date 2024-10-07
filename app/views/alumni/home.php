@@ -11,7 +11,7 @@
               <a href="<?= Flight::request()->base ?>/dashboard/alumni/awards" class="col-md-12 col-lg-5 btn btn-secondary p-2 m-2 fs-1">
                 Awards
               </a>
-              <a href="work-experience.php" class="col-md-12 col-lg-5 btn btn-success p-2 m-2 fs-1">
+              <a href="<?= Flight::request()->base ?>/dashboard/alumni/workExp" class="col-md-12 col-lg-5 btn btn-success p-2 m-2 fs-1">
                 Work History
               </a>
               <a href="generate-resume.php" class="col-md-12 col-lg-5 btn btn-info p-2 m-2 fs-1">

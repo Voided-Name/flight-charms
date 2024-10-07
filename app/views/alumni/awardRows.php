@@ -31,19 +31,19 @@ foreach ($alumniAwardsData as $alumniAwardInstance) {
                 </button>
               </div>
               <div class="modal-body">
-                <form method="POST">
-                  <label for="award-name" class="form-label">Name</label>
-                  <input type="text" class="form-control" name="award-name" id="award-name" placeholder="Award Name" value="<?php echo $alumniAwardInstance['award_name'] ?>">
-                  <label for="award-date" class="form-label">Award Date</label>
-                  <input type="date" class="form-control" name="award-date" id="award-date" value="<?php echo $alumniAwardInstance['award_date'] ?>">
-                  <label for="award-institution" class="form-label">Institution</label>
-                  <input type="text" class="form-control" name="award-institution" id="award-institution" value="<?php echo $alumniAwardInstance['given_by'] ?>">
-                  <label for="award-description" class="form-label">Description</label>
-                  <textarea class="form-control" name="award-description" id="award-description" value=""><?php echo $alumniAwardInstance['award_description'] ?></textarea>
+                <form method="POST" action="editAward">
+                  <label for="awardName" class="form-label">Name</label>
+                  <input type="text" class="form-control" name="awardName" id="awardName" placeholder="Award Name" value="<?php echo $alumniAwardInstance['award_name'] ?>">
+                  <label for="awardDate" class="form-label">Award Date</label>
+                  <input type="date" class="form-control" name="awardDate" id="awardDate" value="<?php echo $alumniAwardInstance['award_date'] ?>">
+                  <label for="awardInstitution" class="form-label">Institution</label>
+                  <input type="text" class="form-control" name="awardInstitution" id="awardInstitution" value="<?php echo $alumniAwardInstance['given_by'] ?>">
+                  <label for="awardDescription" class="form-label">Description</label>
+                  <textarea class="form-control" name="awardDescription" id="awardDescription" value=""><?php echo $alumniAwardInstance['award_description'] ?></textarea>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" value="<?php echo $alumniAwardInstance['id'] ?>" name="editAward">Save
+                <button type="submit" class="btn btn-primary" value="<?php echo $alumniAwardInstance['award_id'] ?>" name="editAward">Save
                   changes</button>
                 </form>
               </div>
@@ -67,12 +67,12 @@ foreach ($alumniAwardsData as $alumniAwardInstance) {
                 </button>
               </div>
               <div class="modal-body">
-                <form method="POST">
+                <form method="POST" action="deleteAward">
                   <h3>Confirm Award Removal</h3>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary" value="<?php echo $alumniAwardInstance['id'] ?>" name="deleteAward">Delete
+                <button type="submit" class="btn btn-primary" value="<?php echo $alumniAwardInstance['award_id'] ?>" name="deleteAward">Delete
                   Award</button>
                 </form>
               </div>

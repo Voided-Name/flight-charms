@@ -268,4 +268,17 @@ class baseController
 
     return $status;
   }
+
+  public function allVacancies()
+  {
+    if (isset($_SESSION['rolename'])) {
+      if ($_SESSION['rolename'] == 'Employer') {
+        $_SESSION['employerPage'] = "allVacancies";
+      }
+    }
+
+    $this->app->render('allVacancies', ['username' => $_SESSION['username']], 'home');
+    Flight::render('header', [], 'header');
+    Flight::render('employer/sidebar', [], 'sidebar');
+  }
 }

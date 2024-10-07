@@ -1,5 +1,5 @@
 <?php
-
+bdump($_SESSION['awardAdded']);
 if (isset($_POST['addAward'])) {
   /**
    * @var strip $strip
@@ -68,17 +68,17 @@ if (isset($_POST['deleteAward'])) {
                       <h5 class="modal-title" id="staticBackdropLabel">Add Award</h5>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form method="post">
+                    <form method="post" action="addAward">
                       <div class="modal-body">
                         <div class="form-group">
-                          <label for="award-name" class="form-label">Name</label>
-                          <input type="text" class="form-control" name="award-name" id="award-name" placeholder="Award Name">
+                          <label for="awardName" class="form-label">Name</label>
+                          <input type="text" class="form-control" name="awardName" id="awardName" placeholder="Award Name" required>
                           <label for="award-date" class="form-label">Award Date</label>
-                          <input type="date" class="form-control" name="award-date" id="award-date">
+                          <input type="date" class="form-control" name="awardDate" id="awardDate" required>
                           <label for="award-institution" class="form-label">Institution</label>
-                          <input type="text" class="form-control" name="award-institution" id="award-institution" placeholder="">
+                          <input type="text" class="form-control" name="awardInstitution" id="awardInstitution" placeholder="" required>
                           <label for="award-description" class="form-label">Description</label>
-                          <input type="textarea" class="form-control" name="award-description" id="award-description">
+                          <input type="textarea" class="form-control" name="awardDescription" id="awardDescription" required>
                         </div>
                         <div class="text-start">
                           <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" name="addAward">Save</button>
@@ -112,8 +112,74 @@ if (isset($_POST['deleteAward'])) {
     </div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+  <?php if (isset($_SESSION['awardDeleted'])) {
+    if ($_SESSION['awardDeleted']) { ?>
+      Swal.fire({
+        icon: 'success',
+        title: 'Deleted',
+        text: 'Award Successfully Deleted!'
+      })
+  <?php $_SESSION['awardDeleted'] = false;
+    }
+  } ?>
+
+  <?php if (isset($_SESSION['awardNotDeleted'])) {
+    if ($_SESSION['awardNotDeleted']) { ?>
+      Swal.fire({
+        icon: 'error',
+        title: 'Not Deleted',
+        text: 'Something went wrong!'
+      })
+  <?php $_SESSION['awardNotDeleted'] = false;
+    }
+  } ?>
+
+  <?php if (isset($_SESSION['awardEdited'])) {
+    if ($_SESSION['awardEdited']) { ?>
+      Swal.fire({
+        icon: 'success',
+        title: 'Updated',
+        text: 'Award Successfully Updated!'
+      })
+  <?php $_SESSION['awardEdited'] = false;
+    }
+  } ?>
+
+  <?php if (isset($_SESSION['awardNotEdited'])) {
+    if ($_SESSION['awardNotEdited']) { ?>
+      Swal.fire({
+        icon: 'error',
+        title: 'Not Edited',
+        text: 'Something went wrong!'
+      })
+  <?php $_SESSION['awardNotEdited'] = false;
+    }
+  } ?>
+
+  <?php if (isset($_SESSION['awardAdded'])) {
+    if ($_SESSION['awardAdded']) { ?>
+      Swal.fire({
+        icon: 'success',
+        title: 'Added',
+        text: 'Award Successfully Added!'
+      })
+  <?php $_SESSION['awardAdded'] = false;
+    }
+  } ?>
+
+  <?php if (isset($_SESSION['awardNotAdded'])) {
+    if ($_SESSION['awardNotAdded']) { ?>
+      Swal.fire({
+        icon: 'error',
+        title: 'Not Added',
+        text: 'Something went wrong!'
+      })
+  <?php $_SESSION['awardNotAdded'] = false;
+    }
+  } ?>
   async function showDeleteAlert(event) {
     Swal.fire({
       title: 'Deleted!',
