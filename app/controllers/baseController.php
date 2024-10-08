@@ -277,8 +277,296 @@ class baseController
       }
     }
 
-    $this->app->render('allVacancies', ['username' => $_SESSION['username']], 'home');
+    if (!isset($_SESSION['paginationNum'])) {
+      $_SESSION['paginationNum'] = 0;
+    }
+
+    if (isset($_GET['applyFilters'])) {
+      $filterData = array(
+        isset($_GET['locationCheckboxes']) ? $_GET['locationCheckboxes'] : '',
+        isset($_GET['jobTypeCheckboxes']) ? $_GET['jobTypeCheckboxes'] : '',
+        isset($_GET['radioShift']) ? $_GET['radioShift'] : '',
+        isset($_GET['radioEducation']) ? $_GET['radioEducation'] : ''
+      );
+      $locationFilters = array('', '', '', '');
+      $jobTypeFilters = $filterData[1];
+
+      if ($filterData[0] != '') {
+        if (in_array('regionCheckVal', $filterData[0])) {
+          $locationFilters[0] = $_GET['regions'];
+        }
+        if (in_array('provinceCheckVal', $filterData[0])) {
+          $locationFilters[1] = $_GET['provinces'];
+        }
+        if (in_array('municipalityCheckVal', $filterData[0])) {
+          $locationFilters[2] = $_GET['municipalities'];
+        }
+        if (in_array('municipalityCheckVal', $filterData[0])) {
+          $locationFilters[3] = $_GET['barangays'];
+        }
+        $_SESSION['locationFilters'] = $locationFilters;
+      } else {
+        $_SESSION['locationFilters'] = '';
+      }
+
+      if ($filterData[1] != '') {
+        $_SESSION['jobTypeFilters'] = $jobTypeFilters;
+      } else {
+        $_SESSION['jobTypeFilters'] = '';
+      }
+      if ($filterData[2] != '') {
+        $_SESSION['shiftFilter'] = $filterData[2];
+      } else {
+        $_SESSION['shiftFilter'] = '';
+      }
+      if ($filterData[3] != '') {
+        $_SESSION['educFilter'] = $filterData[3];
+      } else {
+        $_SESSION['educFilter'] = '';
+      }
+    }
+
+    if (isset($_SESSION['locationFilters'])) {
+      $locationFiltersSql = "";
+      $locationFilters = $_SESSION['locationFilters'];
+      $args = 0;
+
+      if ($locationFilters) {
+        if ($locationFilters[0] != '') {
+          if ($args == 0) {
+            $locationFiltersSql .= "WHERE employer_job_posts.job_region = '" . $locationFilters[0] . "'";
+            $args = 1;
+          } else {
+            $locationFiltersSql .= " AND employer_job_posts.job_region = '" . $locationFilters[0] . "'";
+          }
+        }
+        if ($locationFilters[1] != '') {
+          if ($args == 0) {
+            $locationFiltersSql .= "WHERE employer_job_posts.job_province= '" . $locationFilters[1] . "'";
+            $args = 1;
+          }
+          $locationFiltersSql .= " AND employer_job_posts.job_province= '" . $locationFilters[1] . "'";
+        }
+        if ($locationFilters[2] != '') {
+          if ($args == 0) {
+            $locationFiltersSql .= "WHERE employer_job_posts.job_municipality= '" . $locationFilters[2] . "'";
+            $args = 1;
+          } else {
+            $locationFiltersSql .= "AND employer_job_posts.job_municipality = '" . $locationFilters[2] . "'";
+          }
+        }
+        if ($locationFilters[3] != '') {
+          if ($args == 0) {
+            $locationFiltersSql .= "WHERE employer_job_posts.job_barangay = '" . $locationFilters[3] . "'";
+            $args = 1;
+          }
+          $locationFiltersSql .= " AND employer_job_posts.job_barangay = '" . $locationFilters[3] . "'";
+        }
+      }
+    }
+
+
+    if (isset($_SESSION['jobTypeFilters'])) {
+      $jobTypeFiltersSql = '';
+      $jobTypeFilters = $_SESSION['jobTypeFilters'];
+      $_SESSION['jobTypeFilters'] = $jobTypeFilters;
+
+
+      if ($jobTypeFilters) {
+        if (in_array('fullTime', $jobTypeFilters)) {
+          if ($args == 0) {
+            $jobTypeFiltersSql .= "WHERE employer_job_posts.job_type LIKE '" . "1_____'";
+            $args = 1;
+          } else {
+            $jobTypeFiltersSql .= " AND employer_job_posts.job_type LIKE '" . "1_____";
+          }
+        }
+        if (in_array('partTime', $jobTypeFilters)) {
+          if ($args == 0) {
+            $jobTypeFiltersSql .= "WHERE employer_job_posts.job_type LIKE '" . "_1____'";
+            $args = 1;
+          } else {
+            $jobTypeFiltersSql .= " AND employer_job_posts.job_type LIKE '" . "_1____";
+          }
+        }
+        if (in_array('contract', $jobTypeFilters)) {
+          if ($args == 0) {
+            $jobTypeFiltersSql .= "WHERE employer_job_posts.job_type LIKE '" . "__1___'";
+            $args = 1;
+          } else {
+            $jobTypeFiltersSql .= " AND employer_job_posts.job_type LIKE '" . "__1___";
+          }
+        }
+        if (in_array('temporary', $jobTypeFilters)) {
+          if ($args == 0) {
+            $jobTypeFiltersSql .= "WHERE employer_job_posts.job_type LIKE '" . "___1__'";
+            $args = 1;
+          } else {
+            $jobTypeFiltersSql .= " AND employer_job_posts.job_type LIKE '" . "___1__";
+          }
+        }
+        if (in_array('remote', $jobTypeFilters)) {
+          if ($args == 0) {
+            $jobTypeFiltersSql .= "WHERE employer_job_posts.job_type LIKE '" . "____1_'";
+            $args = 1;
+          } else {
+            $jobTypeFiltersSql .= " AND employer_job_posts.job_type LIKE '" . "____1_";
+          }
+        }
+        if (in_array('freelance', $jobTypeFilters)) {
+          if ($args == 0) {
+            $jobTypeFiltersSql .= "WHERE employer_job_posts.job_type LIKE '" . "_____1'";
+            $args = 1;
+          } else {
+            $jobTypeFiltersSql .= " AND employer_job_posts.job_type LIKE '" . "_____1";
+          }
+        }
+      }
+    }
+
+    if (isset($_SESSION['shiftFilter'])) {
+      $shiftFilterSql = '';
+      $shiftFilter = $_SESSION['shiftFilter'];
+
+      if ($shiftFilter) {
+        switch ($shiftFilter) {
+          case '1':
+            if ($args == 0) {
+              $shiftFilterSql .= 'WHERE employer_job_posts.job_shift = 1';
+              $args = 1;
+            } else {
+              $shiftFilterSql .= ' AND employer_job_posts.job_shift = 1';
+            }
+            break;
+          case '2':
+            if ($args == 0) {
+              $shiftFilterSql .= 'WHERE employer_job_posts.job_shift = 2';
+              $args = 1;
+            } else {
+              $shiftFilterSql .= ' AND employer_job_posts.job_shift = 2';
+            }
+            break;
+          case '3':
+            if ($args == 0) {
+              $shiftFilterSql .= 'WHERE employer_job_posts.job_shift = 3';
+              $args = 1;
+            } else {
+              $shiftFilterSql .= ' AND employer_job_posts.job_shift = 3';
+            }
+            break;
+          case '4':
+            if ($args == 0) {
+              $shiftFilterSql .= 'WHERE employer_job_posts.job_shift = 4';
+              $args = 1;
+            } else {
+              $shiftFilterSql .= ' AND employer_job_posts.job_shift = 4';
+            }
+            break;
+          case '5':
+            if ($args == 0) {
+              $shiftFilterSql .= 'WHERE employer_job_posts.job_shift = 5';
+              $args = 1;
+            } else {
+              $shiftFilterSql .= ' AND employer_job_posts.job_shift = 5';
+            }
+            break;
+        }
+      }
+    }
+
+    if (isset($_SESSION['educFilter'])) {
+      $educFilterSql = '';
+      $educFilter = $_SESSION['educFilter'];
+
+      if ($educFilter) {
+        switch ($educFilter) {
+          case '1':
+            if ($args == 0) {
+              $educFilterSql .= 'WHERE employer_job_posts.education = 1';
+              $args = 1;
+            } else {
+              $educFilterSql .= ' AND employer_job_posts.education = 1';
+            }
+            break;
+          case '2':
+            if ($args == 0) {
+              $educFilterSql .= 'WHERE employer_job_posts.education = 2';
+              $args = 1;
+            } else {
+              $educFilterSql .= ' AND employer_job_posts.education = 2';
+            }
+            break;
+          case '3':
+            if ($args == 0) {
+              $educFilterSql .= 'WHERE employer_job_posts.education = 3';
+              $args = 1;
+            } else {
+              $educFilterSql .= ' AND employer_job_posts.education = 3';
+            }
+            break;
+          case '4':
+            if ($args == 0) {
+              $educFilterSql .= 'WHERE employer_job_posts.education = 4';
+              $args = 1;
+            } else {
+              $educFilterSql .= ' AND employer_job_posts.education = 4';
+            }
+            break;
+        }
+      }
+    }
+
+    $filters = '';
+    if (isset($_SESSION['locationFilter'])) {
+      $filters .= $locationFiltersSql;
+    }
+    if (isset($_SESSION['jobTypeFilters'])) {
+      $filters .= $jobTypeFiltersSql;
+    }
+    if (isset($_SESSION['shiftFilter'])) {
+      $filters .= $shiftFilterSql;
+    }
+    if (isset($_SESSION['educFilter'])) {
+      $filters .= $educFilterSql;
+    }
+
+    $db = Flight::db();
+    $stmt = $db->prepare("SELECT * FROM employer_job_posts LEFT JOIN employer_users ON employer_job_posts.author_id = employer_users.user_id LEFT JOIN companies ON employer_users.company_id = companies.company_id " . $filters);
+    $status = $stmt->execute();
+
+    //$data = $func->vacancy_filters('employer_job_posts', 'employer_users', 'companies', 'author_id', 'user_id', 'company_id', 'id', $_SESSION['paginationNum'] * 5, 6, $_SESSION['locationFilters'], $_SESSION['jobTypeFilters'], $_SESSION['shiftFilter'], $_SESSION['educFilter']);
+
+    //if ($limit) {
+    //$sql = "SELECT * FROM {$table1} LEFT JOIN {$table2} ON {$table1}.{$ref1} = {$table2}.{$ref2} LEFT JOIN {$table3} ON {$table2}.{$ref3} = {$table3}.{$ref4} {$locationFiltersSql} {$jobTypeFiltersSql} {$shiftFilterSql} {$educFilterSql} LIMIT {$limit} OFFSET {$offset} ";
+    //} else {
+    //$sql = "SELECT * FROM {$table1} LEFT JOIN {$table2} ON {$table1}.{$ref1} = {$table2}.{$ref2} LEFT JOIN {$table3} ON {$table2}.{$ref3} = {$table3}.{$ref4} {$locationFiltersSql} {$jobTypeFiltersSql} {$shiftFilterSql} {$educFilterSql}";
+    //}
+
+    //$qry = $con->query($sql);
+    //while ($row = mysqli_fetch_assoc($qry)) {
+    //$list[] = $row;
+    //}
+
+    $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    $stmt = $db->prepare("SELECT COUNT(*) as total_count FROM employer_job_posts LEFT JOIN employer_users ON employer_job_posts.author_id = employer_users.user_id LEFT JOIN companies ON employer_users.company_id = companies.company_id " . $filters);
+    $status = $stmt->execute();
+    $dataCount = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    if (!$dataCount) {
+      $dataCount = 0;
+    } else {
+      $dataCount = $dataCount['total_count'];
+    }
+
+    Flight::view()->set('data', $data);
+    Flight::view()->set('dataCount', $dataCount);
+    bdump($dataCount);
+    bdump($data);
+
     Flight::render('header', [], 'header');
     Flight::render('employer/sidebar', [], 'sidebar');
+    Flight::render('allVacanciesPagination', [], 'allVacanciesPagination');
+    Flight::render('allVacanciesCard', [], 'allVacanciesCard');
+    $this->app->render('allVacancies', ['username' => $_SESSION['username']], 'home');
   }
 }

@@ -271,7 +271,7 @@ if (isset($_POST['submitBtn'])) {
           <hr class="border border-1 border-primary opacity-25">
           <div class="row mb-2">
             <div class="col-12">
-              <legend>Education</legend>
+              <legend>Education (required)</legend>
             </div>
             <div class="col-6">
               <ul class="list-group">
@@ -620,6 +620,18 @@ if (isset($_POST['submitBtn'])) {
         })
     <?php
         $_SESSION['jobVacancyCreated'] = false;
+      }
+    } ?>
+
+    <?php if (isset($_SESSION['jobVacancyNotCreated'])) {
+      if ($_SESSION['jobVacancyNotCreated']) { ?>
+        Swal.fire({
+          icon: "error",
+          title: "Not Created!",
+          text: "Check your input fields"
+        })
+    <?php
+        $_SESSION['jobVacancyNotCreated'] = false;
       }
     } ?>
   </script>

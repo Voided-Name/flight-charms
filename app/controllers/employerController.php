@@ -79,6 +79,7 @@ class employerController
     $numVacancies = strip_tags(Flight::request()->data->numVacancies);
     $locationCheckboxes = Flight::request()->data->locationCheckboxes;
 
+
     if (in_array("regionCheckVal", $locationCheckboxes)) {
       $region = strip_tags(Flight::request()->data->regions);
     } else {
@@ -103,29 +104,31 @@ class employerController
     $jobTypeCheckboxes = Flight::request()->data->jobTypeCheckboxes;
     $jobType = "000000";
 
-    if (in_array("fullTime", $jobTypeCheckboxes)) {
-      $isFullTime = true;
-      $jobType[0] = '1';
-    }
-    if (in_array("partTime", $jobTypeCheckboxes)) {
-      $isPartTime = true;
-      $jobType[1] = '1';
-    }
-    if (in_array("contract", $jobTypeCheckboxes)) {
-      $isContract = true;
-      $jobType[2] = '1';
-    }
-    if (in_array("temporary", $jobTypeCheckboxes)) {
-      $isTemporary = true;
-      $jobType[3] = '1';
-    }
-    if (in_array("remote", $jobTypeCheckboxes)) {
-      $isRemote = true;
-      $jobType[4] = '1';
-    }
-    if (in_array("freelance", $jobTypeCheckboxes)) {
-      $isFreelance = true;
-      $jobType[5] = '1';
+    if ($jobTypeCheckboxes) {
+      if (in_array("fullTime", $jobTypeCheckboxes)) {
+        $isFullTime = true;
+        $jobType[0] = '1';
+      }
+      if (in_array("partTime", $jobTypeCheckboxes)) {
+        $isPartTime = true;
+        $jobType[1] = '1';
+      }
+      if (in_array("contract", $jobTypeCheckboxes)) {
+        $isContract = true;
+        $jobType[2] = '1';
+      }
+      if (in_array("temporary", $jobTypeCheckboxes)) {
+        $isTemporary = true;
+        $jobType[3] = '1';
+      }
+      if (in_array("remote", $jobTypeCheckboxes)) {
+        $isRemote = true;
+        $jobType[4] = '1';
+      }
+      if (in_array("freelance", $jobTypeCheckboxes)) {
+        $isFreelance = true;
+        $jobType[5] = '1';
+      }
     }
 
     $shift = strip_tags(Flight::request()->data->radioShift);
@@ -157,8 +160,20 @@ class employerController
     }
 
     $db = Flight::db();
-    $stmt = $db->prepare("UPDATE employer_job_posts SET author_id = :author_id, education = :education, position = :position, slot_available = :slot_available, job_type = :job_type, job_shift = :job_shift, salary_format = :salary_format, salary_min = :salary_min, salary_max = :salary_max, salary_hour = :salary_hour, job_description = :job_description, job_region = :job_region, job_province = :job_province, job_municipality = :job_municipality, job_barangay = :job_barangay WHERE job_id = :editSaveBtn");
-    $status = $stmt->execute(['author_id' => $_SESSION['userid'], 'education' => $education, 'position' => $position, 'slot_available' => $numVacancies, 'job_type' => $jobType, 'job_shift' => $shift, 'salary_format' => $salaryFormat, 'salary_min' => $rangeSalaryMin, 'salary_max' => $rangeSalaryMax, 'salary_hour' => $hourlySalary, 'job_description' => $description, 'job_region' => $region, 'job_province' => $province, 'job_municipality' => $municipality, 'job_barangay' => $barangay, 'editSaveBtn' => $_POST['editSaveBtn']]);
+    switch ($salaryFormat) {
+      case 'range':
+        $stmt = $db->prepare("UPDATE employer_job_posts SET author_id = :author_id, education = :education, position = :position, slot_available = :slot_available, job_type = :job_type, job_shift = :job_shift, salary_format = :salary_format, salary_min = :salary_min, salary_max = :salary_max, job_description = :job_description, job_region = :job_region, job_province = :job_province, job_municipality = :job_municipality, job_barangay = :job_barangay WHERE job_id = :editSaveBtn");
+        $status = $stmt->execute(['author_id' => $_SESSION['userid'], 'education' => $education, 'position' => $position, 'slot_available' => $numVacancies, 'job_type' => $jobType, 'job_shift' => $shift, 'salary_format' => $salaryFormat, 'salary_min' => $rangeSalaryMin, 'salary_max' => $rangeSalaryMax,  'job_description' => $description, 'job_region' => $region, 'job_province' => $province, 'job_municipality' => $municipality, 'job_barangay' => $barangay, 'editSaveBtn' => $_POST['editSaveBtn']]);
+        break;
+      case 'hour':
+        $stmt = $db->prepare("UPDATE employer_job_posts SET author_id = :author_id, education = :education, position = :position, slot_available = :slot_available, job_type = :job_type, job_shift = :job_shift, salary_format = :salary_format, salary_hour = :salary_hour, job_description = :job_description, job_region = :job_region, job_province = :job_province, job_municipality = :job_municipality, job_barangay = :job_barangay WHERE job_id = :editSaveBtn");
+        $status = $stmt->execute(['author_id' => $_SESSION['userid'], 'education' => $education, 'position' => $position, 'slot_available' => $numVacancies, 'job_type' => $jobType, 'job_shift' => $shift, 'salary_format' => $salaryFormat,  'salary_hour' => $hourlySalary, 'job_description' => $description, 'job_region' => $region, 'job_province' => $province, 'job_municipality' => $municipality, 'job_barangay' => $barangay, 'editSaveBtn' => $_POST['editSaveBtn']]);
+        break;
+      default:
+        $stmt = $db->prepare("UPDATE employer_job_posts SET author_id = :author_id, education = :education, position = :position, slot_available = :slot_available, job_type = :job_type, job_shift = :job_shift, salary_format = :salary_format, job_description = :job_description, job_region = :job_region, job_province = :job_province, job_municipality = :job_municipality, job_barangay = :job_barangay WHERE job_id = :editSaveBtn");
+        $status = $stmt->execute(['author_id' => $_SESSION['userid'], 'education' => $education, 'position' => $position, 'slot_available' => $numVacancies, 'job_type' => $jobType, 'job_shift' => $shift, 'salary_format' => $salaryFormat,  'job_description' => $description, 'job_region' => $region, 'job_province' => $province, 'job_municipality' => $municipality, 'job_barangay' => $barangay, 'editSaveBtn' => $_POST['editSaveBtn']]);
+        break;
+    }
 
     if ($status) {
       $_SESSION['jobVacancyCreated'] = true;
@@ -172,53 +187,62 @@ class employerController
     $numVacancies = strip_tags(Flight::request()->data->numVacancies);
     $locationCheckboxes = Flight::request()->data->locationCheckboxes;
 
-    if (in_array("regionCheckVal", $locationCheckboxes)) {
-      $region = strip_tags(Flight::request()->data->regions);
+    bdump($locationCheckboxes);
+
+    if ($locationCheckboxes) {
+      if (in_array("regionCheckVal", $locationCheckboxes)) {
+        $region = strip_tags(Flight::request()->data->regions);
+      }
+      if (in_array("provinceCheckVal", $locationCheckboxes)) {
+        $province = strip_tags(Flight::request()->data->provinces);
+      } else {
+        $province = 0;
+      }
+      if (in_array("municipalityCheckVal", $locationCheckboxes)) {
+        $municipality = strip_tags(Flight::request()->data->municipalities);
+      } else {
+        $municipality = 0;
+      }
+      if (in_array("barangayCheckVal", $locationCheckboxes)) {
+        $barangay = strip_tags(Flight::request()->data->barangays);
+      } else {
+        $barangay = 0;
+      }
     } else {
       $region = 0;
-    }
-    if (in_array("provinceCheckVal", $locationCheckboxes)) {
-      $province = strip_tags(Flight::request()->data->provinces);
-    } else {
       $province = 0;
-    }
-    if (in_array("municipalityCheckVal", $locationCheckboxes)) {
-      $municipality = strip_tags(Flight::request()->data->municipalities);
-    } else {
       $municipality = 0;
-    }
-    if (in_array("barangayCheckVal", $locationCheckboxes)) {
-      $barangay = strip_tags(Flight::request()->data->barangays);
-    } else {
       $barangay = 0;
     }
 
     $jobTypeCheckboxes = Flight::request()->data->jobTypeCheckboxes;
     $jobType = "000000";
 
-    if (in_array("fullTime", $jobTypeCheckboxes)) {
-      $isFullTime = true;
-      $jobType[0] = '1';
-    }
-    if (in_array("partTime", $jobTypeCheckboxes)) {
-      $isPartTime = true;
-      $jobType[1] = '1';
-    }
-    if (in_array("contract", $jobTypeCheckboxes)) {
-      $isContract = true;
-      $jobType[2] = '1';
-    }
-    if (in_array("temporary", $jobTypeCheckboxes)) {
-      $isTemporary = true;
-      $jobType[3] = '1';
-    }
-    if (in_array("remote", $jobTypeCheckboxes)) {
-      $isRemote = true;
-      $jobType[4] = '1';
-    }
-    if (in_array("freelance", $jobTypeCheckboxes)) {
-      $isFreelance = true;
-      $jobType[5] = '1';
+    if ($jobTypeCheckboxes) {
+      if (in_array("fullTime", $jobTypeCheckboxes)) {
+        $isFullTime = true;
+        $jobType[0] = '1';
+      }
+      if (in_array("partTime", $jobTypeCheckboxes)) {
+        $isPartTime = true;
+        $jobType[1] = '1';
+      }
+      if (in_array("contract", $jobTypeCheckboxes)) {
+        $isContract = true;
+        $jobType[2] = '1';
+      }
+      if (in_array("temporary", $jobTypeCheckboxes)) {
+        $isTemporary = true;
+        $jobType[3] = '1';
+      }
+      if (in_array("remote", $jobTypeCheckboxes)) {
+        $isRemote = true;
+        $jobType[4] = '1';
+      }
+      if (in_array("freelance", $jobTypeCheckboxes)) {
+        $isFreelance = true;
+        $jobType[5] = '1';
+      }
     }
 
     $shift = strip_tags(Flight::request()->data->radioShift);
@@ -257,6 +281,8 @@ class employerController
 
     if ($status) {
       $_SESSION['jobVacancyCreated'] = true;
+    } else {
+      $_SESSION['jobVacancyNotCreated'] = true;
     }
 
     Flight::redirect(Flight::request()->base . '/dashboard/employer/createVacancy');

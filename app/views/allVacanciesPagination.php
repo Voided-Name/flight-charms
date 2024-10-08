@@ -6,8 +6,13 @@ if ($_SESSION['paginationNum'] == 0) {
   $prevState = true;
 }
 
-?>
+if (sizeof($data) == 6) {
+  $nextState = true;
+} else {
+  $nextState = false;
+}
 
+?>
 
 <form method="GET" action="vacancies.php">
   <nav aria-label="Page navigation example">
