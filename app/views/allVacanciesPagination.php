@@ -14,7 +14,7 @@ if (sizeof($data) == 6) {
 
 ?>
 
-<form method="GET" action="vacancies.php">
+<form method="GET" action="allVacancies">
   <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center mt-3">
       <li class="page-item">

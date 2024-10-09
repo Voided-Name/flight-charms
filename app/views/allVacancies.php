@@ -28,37 +28,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
   }
 }
 
-if (isset($_POST['applyFilters'])) {
-  $filterData = array($_POST['locationCheckboxes'], $_POST['jobTypeCheckboxes'], $_POST['radioShift'], $_POST['radioEducation']);
-  $locationFilters = array('', '', '', '');
-  $jobTypeFilters = $filterData[1];
-
-  if ($filterData[0]) {
-    if (in_array('regionCheckVal', $filterData[0])) {
-      $locationFilters[0] = $_POST['regions'];
-    }
-    if (in_array('provinceCheckVal', $filterData[0])) {
-      $locationFilters[1] = $_POST['provinces'];
-    }
-    if (in_array('municipalityCheckVal', $filterData[0])) {
-      $locationFilters[2] = $_POST['municipalities'];
-    }
-    if (in_array('municipalityCheckVal', $filterData[0])) {
-      $locationFilters[3] = $_POST['barangays'];
-    }
-  }
-
-  $_SESSION['locationFilters'] = $locationFilters;
-  $_SESSION['jobTypeFilters'] = $jobTypeFilters;
-  $_SESSION['shiftFilter'] = $filterData[2];
-  $_SESSION['educFilter'] = $filterData[3];
-  header("location: vacancies.php");
-}
-
-//$data = $func->vacancy_filters('employer_job_posts', 'employer_users', 'companies', 'author_id', 'user_id', 'company_id', 'id', $_SESSION['paginationNum'] * 5, 6, $_SESSION['locationFilters'], $_SESSION['jobTypeFilters'], $_SESSION['shiftFilter'], $_SESSION['educFilter']);
-//$dataCount = $func->vacancy_filters('employer_job_posts', 'employer_users', 'companies', 'author_id', 'user_id', 'company_id', 'id', false, false, $_SESSION['locationFilters'], $_SESSION['jobTypeFilters'], $_SESSION['shiftFilter'], $_SESSION['educFilter']);
-
-
 ?>
 
 <div class="conatiner-fluid content-inner mt-n5 py-0">
