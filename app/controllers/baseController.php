@@ -277,9 +277,17 @@ class baseController
       }
     }
 
-    if (!isset($_SESSION['paginationNum'])) {
-      $_SESSION['paginationNum'] = 0;
+    if (!isset($_SESSION['vacancyPage'])) {
+      $_SESSION['vacancyPage'] = 0;
     }
+
+    if (isset($_GET['page'])) {
+      $_SESSION['vacancyPage'] = $_GET['page'];
+    }
+
+    bdump($_SESSION['vacancyPage']);
+
+    $offset = $_SESSION['vacancyPage'] * 5;
 
     if (isset($_GET['applyFilters'])) {
       $filterData = array(
@@ -424,6 +432,7 @@ class baseController
       }
     }
 
+
     if (isset($_SESSION['shiftFilter'])) {
       $shiftFilterSql = '';
       $shiftFilter = $_SESSION['shiftFilter'];
@@ -531,21 +540,8 @@ class baseController
     }
 
     $db = Flight::db();
-    $stmt = $db->prepare("SELECT * FROM employer_job_posts LEFT JOIN employer_users ON employer_job_posts.author_id = employer_users.user_id LEFT JOIN companies ON employer_users.company_id = companies.company_id " . $filters);
+    $stmt = $db->prepare("SELECT * FROM employer_job_posts LEFT JOIN employer_users ON employer_job_posts.author_id = employer_users.user_id LEFT JOIN companies ON employer_users.company_id = companies.company_id " . $filters . "LIMIT 6 OFFSET " . $offset);
     $status = $stmt->execute();
-
-    //$data = $func->vacancy_filters('employer_job_posts', 'employer_users', 'companies', 'author_id', 'user_id', 'company_id', 'id', $_SESSION['paginationNum'] * 5, 6, $_SESSION['locationFilters'], $_SESSION['jobTypeFilters'], $_SESSION['shiftFilter'], $_SESSION['educFilter']);
-
-    //if ($limit) {
-    //$sql = "SELECT * FROM {$table1} LEFT JOIN {$table2} ON {$table1}.{$ref1} = {$table2}.{$ref2} LEFT JOIN {$table3} ON {$table2}.{$ref3} = {$table3}.{$ref4} {$locationFiltersSql} {$jobTypeFiltersSql} {$shiftFilterSql} {$educFilterSql} LIMIT {$limit} OFFSET {$offset} ";
-    //} else {
-    //$sql = "SELECT * FROM {$table1} LEFT JOIN {$table2} ON {$table1}.{$ref1} = {$table2}.{$ref2} LEFT JOIN {$table3} ON {$table2}.{$ref3} = {$table3}.{$ref4} {$locationFiltersSql} {$jobTypeFiltersSql} {$shiftFilterSql} {$educFilterSql}";
-    //}
-
-    //$qry = $con->query($sql);
-    //while ($row = mysqli_fetch_assoc($qry)) {
-    //$list[] = $row;
-    //}
 
     $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     $stmt = $db->prepare("SELECT COUNT(*) as total_count FROM employer_job_posts LEFT JOIN employer_users ON employer_job_posts.author_id = employer_users.user_id LEFT JOIN companies ON employer_users.company_id = companies.company_id " . $filters);
@@ -558,15 +554,36 @@ class baseController
       $dataCount = $dataCount['total_count'];
     }
 
+
     Flight::view()->set('data', $data);
     Flight::view()->set('dataCount', $dataCount);
-    bdump($dataCount);
-    bdump($data);
 
     Flight::render('header', [], 'header');
-    Flight::render('employer/sidebar', [], 'sidebar');
+    if ($_SESSION['rolename'] == 'Employer') {
+      Flight::render('employer/sidebar', [], 'sidebar');
+    }
     Flight::render('allVacanciesPagination', [], 'allVacanciesPagination');
     Flight::render('allVacanciesCard', [], 'allVacanciesCard');
     $this->app->render('allVacancies', ['username' => $_SESSION['username']], 'home');
+  }
+
+  public function vacancyPagination()
+  {
+    $pageNum = $_SESSION['vacancyPage'];
+
+    if ($_SERVER["REQUEST_METHOD"] == "GET") {
+      if (isset($_GET['page'])) {
+        $page = $_GET['page'];
+        if ($page === "next") {
+          $pageNum += 1;
+        } else if ($page === "previous") {
+          $pageNum -= 1;
+        }
+      }
+    }
+
+    if ($_SESSION['rolename'] == "Employer") {
+      Flight::redirect(Flight::request()->base . "/dashboard/employer/allVacancies?page=" . $pageNum);
+    }
   }
 }

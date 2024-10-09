@@ -1,32 +1,6 @@
 <?php
 $_SESSION['employerPage'] = 'allVacancies';
 
-if (!isset($_GET['page'])) {
-  $_SESSION['pagination'] = 1;
-  $_SESSION['paginationNum'] = 0;
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-  if (isset($_GET['page'])) {
-    $page = $_GET['page'];
-
-    if ($page === "next") {
-      if (isset($_SESSION['paginationNum'])) {
-        $_SESSION['paginationNum'] += 1;
-      }
-    } else if ($page === "previous") {
-      if (isset($_SESSION['paginationNum'])) {
-        $_SESSION['paginationNum'] -= 1;
-        if ($_SESSION['paginationNum'] < 0) {
-          $_SESSION['paginationNum'] = 0;
-        }
-        $_SESSION['pagination'] = 3 * $_SESSION['paginationNum'] + 1;
-      }
-    } else {
-      $_SESSION['pagination'] = (int) $page;
-    }
-  }
-}
 
 ?>
 

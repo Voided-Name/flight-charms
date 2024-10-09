@@ -71,6 +71,7 @@ $router->group('/dashboard', function () use ($router, $app) {
     $router->get('/viewApps', [employerController::class, 'viewApps'], false, 'employerViewApps')->addMiddleware([new layoutDefault()]);
     $router->get('/deleteVacancy', [employerController::class, 'deleteVacancy', false, 'employerDeleteVacancy']);
     $router->get('/allVacancies', [baseController::class, 'allVacancies'], false, 'employerViewVacancies')->addMiddleware([new layoutDefault()]);
+    $router->get('/vacancyPagination', [baseController::class, 'vacancyPagination'], false, 'employerVacancyPagination');
   }, [new guard('Employer')]);
 
 

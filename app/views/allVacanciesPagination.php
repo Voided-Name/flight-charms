@@ -1,6 +1,6 @@
 <?php
 
-if ($_SESSION['paginationNum'] == 0) {
+if ($_SESSION['vacancyPage'] == 0) {
   $prevState = false;
 } else {
   $prevState = true;
@@ -14,7 +14,7 @@ if (sizeof($data) == 6) {
 
 ?>
 
-<form method="GET" action="allVacancies">
+<form method="GET" action="vacancyPagination">
   <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center mt-3">
       <li class="page-item">
