@@ -70,6 +70,7 @@ $router->group('/dashboard', function () use ($router, $app) {
     $router->post('/editJobVacancy', [employerController::class, 'editJobVacancy', false, 'employerEditJobVacancy']);
     $router->get('/viewApps', [employerController::class, 'viewApps'], false, 'employerViewApps')->addMiddleware([new layoutDefault()]);
     $router->get('/deleteVacancy', [employerController::class, 'deleteVacancy', false, 'employerDeleteVacancy']);
+
     $router->get('/allVacancies', [baseController::class, 'allVacancies'], false, 'employerViewVacancies')->addMiddleware([new layoutDefault()]);
     $router->get('/vacancyPagination', [baseController::class, 'vacancyPagination'], false, 'employerVacancyPagination');
   }, [new guard('Employer')]);
@@ -85,6 +86,9 @@ $router->group('/dashboard', function () use ($router, $app) {
     $router->post('/addWorkExp', [alumniController::class, 'addWorkExp', false, 'alumniAddWorkExp']);
     $router->post('/editWorkExp', [alumniController::class, 'editWorkExp', false, 'alumniEditWorkExp']);
     $router->post('/deleteWorkExp', [alumniController::class, 'deleteWorkExp', false, 'alumniDeleteWorkExp']);
+
+    $router->get('/allVacancies', [baseController::class, 'allVacancies'], false, 'alumniViewVacancies')->addMiddleware([new layoutDefault()]);
+    $router->get('/vacancyPagination', [baseController::class, 'vacancyPagination'], false, 'alumniVacancyPagination');
   }, [new guard('Alumni')]);
 });
 

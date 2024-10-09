@@ -10,7 +10,7 @@ foreach ($data as $dataInstance) {
     <div class="container row m-0">
       <div class="col-2">
         <img src="<?= Flight::request()->base ?>/assets/company_logo/<?php echo $dataInstance['company_logo']
-                                                                    ?>" width="100" height="100" class="border radius">
+                                                                      ?>" width="100" height="100" class="border radius">
       </div>
       <div class="container col-12 col-lg-8 m-0">
         <h4><?php echo $dataInstance['position'] ?></h4>

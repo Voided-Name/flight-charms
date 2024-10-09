@@ -332,6 +332,9 @@ class baseController
       } else {
         $_SESSION['educFilter'] = '';
       }
+
+      $_SESSION['vacancyPage'] = 0;
+      $offset = 0;
     }
 
     if (isset($_SESSION['locationFilters'])) {
@@ -561,6 +564,8 @@ class baseController
     Flight::render('header', [], 'header');
     if ($_SESSION['rolename'] == 'Employer') {
       Flight::render('employer/sidebar', [], 'sidebar');
+    } else if ($_SESSION['rolename'] == "Alumni") {
+      Flight::render('alumni/sidebar', [], 'sidebar');
     }
     Flight::render('allVacanciesPagination', [], 'allVacanciesPagination');
     Flight::render('allVacanciesCard', [], 'allVacanciesCard');
@@ -584,6 +589,8 @@ class baseController
 
     if ($_SESSION['rolename'] == "Employer") {
       Flight::redirect(Flight::request()->base . "/dashboard/employer/allVacancies?page=" . $pageNum);
+    } else if ($_SESSION['rolename'] == "Alumni") {
+      Flight::redirect(Flight::request()->base . "/dashboard/alumni/allVacancies?page=" . $pageNum);
     }
   }
 }

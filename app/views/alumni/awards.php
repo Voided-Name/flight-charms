@@ -1,5 +1,4 @@
 <?php
-bdump($_SESSION['awardAdded']);
 if (isset($_POST['addAward'])) {
   /**
    * @var strip $strip
