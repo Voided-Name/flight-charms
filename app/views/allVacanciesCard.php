@@ -19,12 +19,12 @@ foreach ($data as $dataInstance) {
           <h6 class="col"><?php echo "Slots: " . $dataInstance['slot_available'] ?></h6>
           <h6 class="col">
             <?php
-            echo $dataInstance['job_province'];
-            if ($dataInstance['job_province']) {
-              if ($dataInstance['job_municipality']) {
+            echo $dataInstance['job_province'] != '0' ? $dataInstance['job_province'] : "";
+            if ($dataInstance['job_province'] != '0') {
+              if ($dataInstance['job_municipality'] != '0') {
                 echo ", " . $dataInstance['job_municipality'];
               }
-            } else if ($dataInstance['job_municipality']) {
+            } else if ($dataInstance['job_municipality'] != '0') {
               echo $dataInstance['job_municipality'];
             }
             ?>
@@ -32,10 +32,8 @@ foreach ($data as $dataInstance) {
         </div>
       </div>
       <div class="col-lg-2 h-100">
-        <form action="apply.php" method="POST">
-          <button type="submit" class="btn btn-dark mb-3" name="applyButton" value="<?php echo $dataInstance['job_id'] ?>" <?php if ($_SESSION['role'] != 1) {
-                                                                                                                              echo "disabled";
-                                                                                                                            } ?>>Apply</button>
+        <form action="<?= $applyButtonRoute ?>" method="GET">
+          <button type="submit" class="btn btn-dark mb-3" name="applyButton" value="<?php echo $dataInstance['job_id'] ?>">Apply</button>
         </form>
         <h6 class="text-secondary"><?php echo $dataInstance['created_at'] ?></h6>
       </div>

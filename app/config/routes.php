@@ -87,8 +87,14 @@ $router->group('/dashboard', function () use ($router, $app) {
     $router->post('/editWorkExp', [alumniController::class, 'editWorkExp', false, 'alumniEditWorkExp']);
     $router->post('/deleteWorkExp', [alumniController::class, 'deleteWorkExp', false, 'alumniDeleteWorkExp']);
 
+    $router->get('/hello', function () {
+      echo "hello";
+    });
+
     $router->get('/allVacancies', [baseController::class, 'allVacancies'], false, 'alumniViewVacancies')->addMiddleware([new layoutDefault()]);
     $router->get('/vacancyPagination', [baseController::class, 'vacancyPagination'], false, 'alumniVacancyPagination');
+    $router->get('/apply', [baseController::class, 'apply'], false, 'alumniApply')->addMiddleware([new layoutDefault()]);
+    $router->get('/apply', [baseController::class, 'apply'], false, 'alumniApply')->addMiddleware([new layoutDefault()]);
   }, [new guard('Alumni')]);
 });
 

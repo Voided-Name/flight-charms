@@ -192,4 +192,89 @@ class alumniController
 
     Flight::redirect(Flight::request()->base . '/dashboard/alumni/workExp');
   }
+
+  public function apply()
+  {
+    /*if ($_SERVER['REQUEST_METHOD'] == 'POST') {*/
+    /*  if (isset($_POST['submitApp'])) {*/
+    /*    $test = "hello";*/
+    /*    // Directory where you want to save the uploaded files*/
+    /*    $targetDirectory = "../files/";*/
+    /**/
+    /*    $uniqueID = uniqid(); // Generates a unique ID based on the current time in microseconds*/
+    /*    $targetFile = $targetDirectory . $uniqueID . "_" . basename($_FILES["formFile"]["name"]);*/
+    /**/
+    /**/
+    /*    // Flag to check if everything is okay*/
+    /*    $uploadOk = 1;*/
+    /**/
+    /*    // Get file extension*/
+    /*    $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));*/
+    /**/
+    /*    // Check if the file already exists*/
+    /*    if (file_exists($targetFile)) {*/
+    /*      //echo "Sorry, file already exists.";*/
+    /*      $uploadOk = 0;*/
+    /*    }*/
+    /**/
+    /*    // Check file size (limit set to 5MB)*/
+    /*    /* if ($_FILES["fileUpload"]["size"] > 5000000) { */
+    /*    /*   echo "Sorry, your file is too large."; */
+    /*    /*   $uploadOk = 0; */
+    /*    /* } */
+    /*    /**/
+    /**/
+    /*    // Allow certain file formats (e.g., jpg, png, gif, pdf)*/
+    /*    $allowedFileTypes = array("pdf");*/
+    /*    if (!in_array($fileType, $allowedFileTypes)) {*/
+    /*      //echo "Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed." . $fileType;*/
+    /*      $uploadOk = 0;*/
+    /*    }*/
+    /**/
+    /*    // Check if $uploadOk is set to 0 by an error*/
+    /*    if ($uploadOk == 0) {*/
+    /*      //echo "Sorry, your file was not uploaded." . $targetFile;*/
+    /*    } else {*/
+    /*      // Attempt to move the uploaded file to the target directory*/
+    /*      if (move_uploaded_file($_FILES["formFile"]["tmp_name"], $targetFile)) {*/
+    /*        //echo "The file " . htmlspecialchars(basename($_FILES["formFile"]["name"])) . " has been uploaded.";*/
+    /**/
+    /*        $func->insert('applications', array(*/
+    /*          'file_name' => $targetFile,*/
+    /*          'application_post_id' => $_POST['submitApp'],*/
+    /*          'application_alumni_id' => $_SESSION['userid'],*/
+    /*        ));*/
+    /**/
+    /*        $func->insert('alumni_employment_status', array(*/
+    /*          'status_post_id' => $_POST['submitApp'],*/
+    /*          'status_alumni_id' => $_SESSION['userid'],*/
+    /*          'status' => 0,*/
+    /*        ));*/
+    /*      } else {*/
+    /*        //echo "Sorry, there was an error uploading your file.";*/
+    /*      }*/
+    /*    }*/
+    /*  }*/
+  }
+  public function bak()
+  {
+    $_SESSION['alumniPage'] = "workExp";
+
+    $db = Flight::db();
+    $stmt = $db->prepare("SELECT * FROM alumni_work_experience WHERE owner_id = :userid");
+    $status = $stmt->execute(['userid' => $_SESSION['userid']]);
+    $alumniWorkData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    Flight::view()->set('alumniWorkData', $alumniWorkData);
+
+    Flight::render('header', [], 'header');
+    Flight::render('alumni/workExperienceRows', [], 'workExperienceRows');
+    Flight::render('alumni/sidebar', [], 'sidebar');
+
+
+    $this->app->render('alumni/workExperience', [
+      'username' => $_SESSION['username'],
+      'alumniWorkData' => $alumniWorkData
+    ], 'home');
+  }
 }

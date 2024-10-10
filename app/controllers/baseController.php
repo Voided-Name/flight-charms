@@ -274,6 +274,10 @@ class baseController
     if (isset($_SESSION['rolename'])) {
       if ($_SESSION['rolename'] == 'Employer') {
         $_SESSION['employerPage'] = "allVacancies";
+        $applyButtonRoute = Flight::request()->base . '/dashboard/employer/viewApply';
+      } else if ($_SESSION['rolename'] == 'Alumni') {
+        $_SESSION['alumniPage'] = "vacancies";
+        $applyButtonRoute = Flight::request()->base . '/dashboard/alumni/apply';
       }
     }
 
@@ -558,6 +562,7 @@ class baseController
     }
 
 
+    Flight::view()->set('applyButtonRoute', $applyButtonRoute);
     Flight::view()->set('data', $data);
     Flight::view()->set('dataCount', $dataCount);
 
@@ -587,10 +592,35 @@ class baseController
       }
     }
 
+
     if ($_SESSION['rolename'] == "Employer") {
       Flight::redirect(Flight::request()->base . "/dashboard/employer/allVacancies?page=" . $pageNum);
     } else if ($_SESSION['rolename'] == "Alumni") {
       Flight::redirect(Flight::request()->base . "/dashboard/alumni/allVacancies?page=" . $pageNum);
     }
+  }
+
+  public function apply()
+  {
+    $job_id = $_GET['applyButton'];
+    //$dataInstance = $func->selectjoin3_where('employer_job_posts', 'employer_users', 'companies', 'author_id', 'user_id', 'company_id', 'id', 'employer_job_posts', array('post_id', '=', $_SESSION['applyId']));
+    $db = Flight::db();
+    $stmt = $db->prepare("SELECT * FROM employer_job_posts JOIN employer_users ON employer_job_posts.author_id = employer_users.user_id JOIN companies ON employer_users.company_id = companies.company_id WHERE job_id = :job_id");
+    $status = $stmt->execute(["job_id" => $job_id]);
+    $dataInstance = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    if ($_SESSION['rolename'] == "Alumni") {
+      Flight::render('alumni/sidebar', [], 'sidebar');
+    } else if ($_SESSION['rolename'] == "Employer") {
+      Flight::render('employer/sidebar', [], 'sidebar');
+    } else if ($_SESSION['rolename'] == "Faculty") {
+      Flight::render('faculty/sidebar', [], 'sidebar');
+    } else if ($_SESSION['rolename'] == "Admin") {
+      Flight::render('admin/sidebar', [], 'sidebar');
+    }
+
+    Flight::view()->set('dataInstance', $dataInstance);
+    Flight::render('header', [], 'header');
+    $this->app->render('apply', ['username' => $_SESSION['username']], 'home');
   }
 }
