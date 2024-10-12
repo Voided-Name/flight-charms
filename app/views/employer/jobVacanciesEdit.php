@@ -21,6 +21,7 @@ if (!isset($vacanciesData[$_GET['editBtnVal']])) {
                   <a href="<?= Flight::request()->base ?>/dashboard/employer/jobVacancies"><button type="button" class="btn btn-secondary">
                       Back</button></a>
                 </div>
+                <?= $locations ?>
                 <div class="row mb-2">
                   <div class="col">
                     <label for="position">Position</label>
@@ -484,7 +485,6 @@ if (!isset($vacanciesData[$_GET['editBtnVal']])) {
   } else if (salaryFormat.value == "negotiable") {
     document.getElementById("rangeMaxDiv").style.display = "none";
     document.getElementById("rangeMinDiv").style.display = "none";
-
     document.getElementById("phpHourDiv").style.display = "none";
   }
 
@@ -557,6 +557,7 @@ if (!isset($vacanciesData[$_GET['editBtnVal']])) {
     function getMunicipality(region_name, province_name) {
       $.getJSON("<?= Flight::request()->base ?>/assets/locations.json", function(result) {
         // console.log(result[region_name].province_list[province_name]);
+        console.log(province_name);
         if (region_name && province_name) {
           $.each(result[region_name].province_list[province_name].municipality_list, function(key, value) {
             // console.log(key);
@@ -590,16 +591,17 @@ if (!isset($vacanciesData[$_GET['editBtnVal']])) {
 
   });
   if (document.getElementById('regionCheckbox').checked) {
-    document.getElementById('regions').value = <?php echo $vacanciesData[$_GET['editBtnVal']]['job_region'] ?>
+    document.getElementById('regions').value = '<?php echo $vacanciesData[$_GET['editBtnVal']]['job_region'] ?>';
   }
   if (document.getElementById('provinceCheckbox').checked) {
-    document.getElementById('provinces').value = <?php echo $vacanciesData[$_GET['editBtnVal']]['job_province'] ?>
+    document.getElementById('provinces').value = '<?php echo $vacanciesData[$_GET['editBtnVal']]['job_province'] ?>';
+    console.log('<?php echo $vacanciesData[$_GET['editBtnVal']]['job_province'] ?>');
   }
   if (document.getElementById('municipalityCheckbox').checked) {
-    document.getElementById('municipalities').value = <?php echo $vacanciesData[$_GET['editBtnVal']]['job_municipality'] ?>
+    document.getElementById('municipalities').value = '<?php echo $vacanciesData[$_GET['editBtnVal']]['job_municipality'] ?>';
   }
   if (document.getElementById('barangayCheckbox').checked) {
-    document.getElementById('barangays').value = <?php echo $vacanciesData[$_GET['editBtnVal']]['job_barangay'] ?>
+    document.getElementById('barangays').value = '<?php echo $vacanciesData[$_GET['editBtnVal']]['job_barangay'] ?>';
   }
 </script>
 

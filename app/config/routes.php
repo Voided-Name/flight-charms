@@ -27,6 +27,43 @@ $router->post('/register', [baseController::class, 'registerBtn']);
 $router->get('/login', [baseController::class, 'login']);
 $router->post('/login', [baseController::class, 'loginBtn']);
 
+Flight::route('/locations/regions', function () {
+  $locations = json_decode(file_get_contents('assets/locations.json'), true);
+  Flight::render('regions.php', ['regions' => $locations]);
+});
+
+Flight::route('/locations/provinces', function () {
+  $region = Flight::request()->query->regions;
+  $locations = json_decode(file_get_contents('assets/locations.json'), true);
+  $provinces = $locations[$region]['province_list'] ?? [];
+  Flight::render('provinces.php', ['provinces' => $provinces]);
+});
+
+Flight::route('/locations/municipalities', function () {
+  $region = Flight::request()->query->regions;
+  $province = Flight::request()->query->provinces;
+  $locations = json_decode(file_get_contents('assets/locations.json'), true);
+  $municipalities = $locations[$region]['province_list'][$province]['municipality_list'] ?? [];
+  bdump($region);
+  bdump($province);
+  bdump($municipalities);
+  Flight::render('municipalities.php', ['municipalities' => $municipalities]);
+});
+
+Flight::route('/locations/barangays', function () {
+  $region = Flight::request()->query->regions;
+  $province = Flight::request()->query->provinces;
+  $municipality = Flight::request()->query->municipalities;
+  $locations = json_decode(file_get_contents('assets/locations.json'), true);
+  $barangays = $locations[$region]['province_list'][$province]['municipality_list'][$municipality]['barangay_list'] ?? [];
+  bdump($region);
+  bdump($province);
+  bdump($municipality);
+  bdump($barangays);
+  Flight::render('barangays.php', ['barangays' => $barangays]);
+});
+
+
 
 $router->group('/dashboard', function () use ($router, $app) {
   // Admin Dashboard
@@ -70,6 +107,9 @@ $router->group('/dashboard', function () use ($router, $app) {
     $router->post('/editJobVacancy', [employerController::class, 'editJobVacancy', false, 'employerEditJobVacancy']);
     $router->get('/viewApps', [employerController::class, 'viewApps'], false, 'employerViewApps')->addMiddleware([new layoutDefault()]);
     $router->get('/deleteVacancy', [employerController::class, 'deleteVacancy', false, 'employerDeleteVacancy']);
+    $router->get('/testLocation', function () {
+      Flight::render('employer/locationTest');
+    });
 
     $router->get('/allVacancies', [baseController::class, 'allVacancies'], false, 'employerViewVacancies')->addMiddleware([new layoutDefault()]);
     $router->get('/vacancyPagination', [baseController::class, 'vacancyPagination'], false, 'employerVacancyPagination');

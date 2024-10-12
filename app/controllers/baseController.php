@@ -623,4 +623,13 @@ class baseController
     Flight::render('header', [], 'header');
     $this->app->render('apply', ['username' => $_SESSION['username']], 'home');
   }
+
+  public static function renderLocation($region, $province, $municipality, $barangay)
+  {
+    Flight::view()->set('region', $region);
+    Flight::view()->set('province', $province);
+    Flight::view()->set('municipality', $municipality);
+    Flight::view()->set('barangay', $barangay);
+    Flight::render('locations', [], 'locations');
+  }
 }

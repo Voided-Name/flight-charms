@@ -51,10 +51,18 @@ class employerController
     $vacanciesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
     Flight::view()->set("vacanciesData", $vacanciesData);
+
+
     Flight::render('header', [], 'header');
     Flight::render('employer/sidebar', [], 'sidebar');
     Flight::render('employer/jobVacanciesData', [], 'jobVacanciesData');
     $this->app->render('employer/jobVacancies', ['username' => $_SESSION['username']], 'home');
+  }
+
+  public function renderTitle()
+  {
+
+    Flight::view()->set('title', 'hello');
   }
 
   public function jobVacanciesEdit()
@@ -66,7 +74,9 @@ class employerController
     $stmt = $db->prepare("SELECT * FROM employer_job_posts WHERE author_id = :user_id");
     $status = $stmt->execute(['user_id' => $_SESSION['userid']]);
     $vacanciesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    bdump($vacanciesData);
 
+    baseController::renderLocation($vacanciesData[0]['job_region'], $vacanciesData[0]['job_province'], $vacanciesData[0]['job_municipality'], $vacanciesData[0]['job_barangay']);
     Flight::view()->set("vacanciesData", $vacanciesData);
     Flight::render('header', [], 'header');
     Flight::render('employer/sidebar', [], 'sidebar');
@@ -80,24 +90,31 @@ class employerController
     $locationCheckboxes = Flight::request()->data->locationCheckboxes;
 
 
-    if (in_array("regionCheckVal", $locationCheckboxes)) {
-      $region = strip_tags(Flight::request()->data->regions);
+    if ($locationCheckboxes) {
+      if (in_array("regionCheckVal", $locationCheckboxes)) {
+        $region = strip_tags(Flight::request()->data->regions);
+      } else {
+        $region = 0;
+      }
+      if (in_array("provinceCheckVal", $locationCheckboxes)) {
+        $province = strip_tags(Flight::request()->data->provinces);
+      } else {
+        $province = 0;
+      }
+      if (in_array("municipalityCheckVal", $locationCheckboxes)) {
+        $municipality = strip_tags(Flight::request()->data->municipalities);
+      } else {
+        $municipality = 0;
+      }
+      if (in_array("barangayCheckVal", $locationCheckboxes)) {
+        $barangay = strip_tags(Flight::request()->data->barangays);
+      } else {
+        $barangay = 0;
+      }
     } else {
       $region = 0;
-    }
-    if (in_array("provinceCheckVal", $locationCheckboxes)) {
-      $province = strip_tags(Flight::request()->data->provinces);
-    } else {
       $province = 0;
-    }
-    if (in_array("municipalityCheckVal", $locationCheckboxes)) {
-      $municipality = strip_tags(Flight::request()->data->municipalities);
-    } else {
       $municipality = 0;
-    }
-    if (in_array("barangayCheckVal", $locationCheckboxes)) {
-      $barangay = strip_tags(Flight::request()->data->barangays);
-    } else {
       $barangay = 0;
     }
 

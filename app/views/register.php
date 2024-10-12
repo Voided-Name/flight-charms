@@ -365,10 +365,8 @@
       //CPnumber format validation
       $('#inputCPNum').focusout(function() {
         var input = $(this).val();
-
         // Regular expression to check if input starts with 09 and has exactly 11 digits
         var regex = /^09\d{9}$/;
-
         if (!regex.test(input)) {
           Swal.fire({
             icon: 'error',
