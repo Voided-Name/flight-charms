@@ -88,6 +88,10 @@ $router->group('/dashboard', function () use ($router, $app) {
       $app->render('admin/generate');
     }, false, 'adminhome')->addMiddleware([new layoutDefault()]);
     $router->get('/create', function () use ($app) {}, false, 'adminhome')->addMiddleware([new layoutDefault()]);
+
+    $router->get('/allVacancies', [baseController::class, 'allVacancies'], false, 'adminViewVacancies')->addMiddleware([new layoutDefault()]);
+    $router->get('/vacancyPagination', [baseController::class, 'vacancyPagination'], false, 'adminVacancyPagination');
+    $router->get('/apply', [baseController::class, 'apply'], false, 'adminApply')->addMiddleware([new layoutDefault()]);
   }, [new guard('Admin')]);
 
   // Faculty Dashboard
@@ -98,6 +102,10 @@ $router->group('/dashboard', function () use ($router, $app) {
     $router->post('/deleteAnnouncement', [facultyController::class, 'deleteAnnouncement'], false, 'facultyDeleteAnnouncement');
     $router->post('/postAnnouncementMethod', [facultyController::class, 'postAnnouncementMethod'], false, 'facultyPostAnnouncementMethod');
     $router->get('/postAnnouncementManage', [facultyController::class, 'postAnnouncementManage'], false, 'facultyPostAnnouncementManage')->addMiddleware([new layoutDefault()]);
+
+    $router->get('/allVacancies', [baseController::class, 'allVacancies'], false, 'facultyViewVacancies')->addMiddleware([new layoutDefault()]);
+    $router->get('/vacancyPagination', [baseController::class, 'vacancyPagination'], false, 'facultyVacancyPagination');
+    $router->get('/apply', [baseController::class, 'apply'], false, 'facultyApply')->addMiddleware([new layoutDefault()]);
   }, [new guard('Faculty')]);
 
   // Employer Dashboard
@@ -121,6 +129,7 @@ $router->group('/dashboard', function () use ($router, $app) {
 
     $router->get('/allVacancies', [baseController::class, 'allVacancies'], false, 'employerViewVacancies')->addMiddleware([new layoutDefault()]);
     $router->get('/vacancyPagination', [baseController::class, 'vacancyPagination'], false, 'employerVacancyPagination');
+    $router->get('/apply', [baseController::class, 'apply'], false, 'adminApply')->addMiddleware([new layoutDefault()]);
   }, [new guard('Employer')]);
 
 
@@ -144,7 +153,6 @@ $router->group('/dashboard', function () use ($router, $app) {
 
     $router->get('/allVacancies', [baseController::class, 'allVacancies'], false, 'alumniViewVacancies')->addMiddleware([new layoutDefault()]);
     $router->get('/vacancyPagination', [baseController::class, 'vacancyPagination'], false, 'alumniVacancyPagination');
-    $router->get('/apply', [baseController::class, 'apply'], false, 'alumniApply')->addMiddleware([new layoutDefault()]);
     $router->get('/apply', [baseController::class, 'apply'], false, 'alumniApply')->addMiddleware([new layoutDefault()]);
   }, [new guard('Alumni')]);
 });

@@ -254,7 +254,7 @@ if ($dataInstance['job_type'] == '000000') {
               <p class="text-dark"><?php echo $dataInstance['job_description']; ?></p>
               <hr class="border border-1">
               <!-- Button trigger modal -->
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applyModal" <?php echo $alreadyApplied ? "disabled" : ""; ?>>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applyModal" <?php echo $alreadyApplied ? "disabled" : ""; ?> <?php echo $_SESSION['rolename'] != 'Alumni' ? "disabled" : "" ?>>
                 Apply <?php echo $alreadyApplied ? "(Applied Already)" : "" ?>
               </button>
 

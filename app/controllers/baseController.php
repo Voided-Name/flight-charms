@@ -287,10 +287,16 @@ class baseController
     if (isset($_SESSION['rolename'])) {
       if ($_SESSION['rolename'] == 'Employer') {
         $_SESSION['employerPage'] = "allVacancies";
-        $applyButtonRoute = Flight::request()->base . '/dashboard/employer/viewApply';
+        $applyButtonRoute = Flight::request()->base . '/dashboard/employer/apply';
       } else if ($_SESSION['rolename'] == 'Alumni') {
         $_SESSION['alumniPage'] = "vacancies";
         $applyButtonRoute = Flight::request()->base . '/dashboard/alumni/apply';
+      } else if ($_SESSION['rolename'] == 'Admin') {
+        $_SESSION['adminPage'] = "vacancies";
+        $applyButtonRoute = Flight::request()->base . '/dashboard/admin/apply';
+      } else if ($_SESSION['rolename'] == 'Faculty') {
+        $_SESSION['facultyPage'] = "vacancies";
+        $applyButtonRoute = Flight::request()->base . '/dashboard/faculty/apply';
       }
     }
 
@@ -584,6 +590,10 @@ class baseController
       Flight::render('employer/sidebar', [], 'sidebar');
     } else if ($_SESSION['rolename'] == "Alumni") {
       Flight::render('alumni/sidebar', [], 'sidebar');
+    } else if ($_SESSION['rolename'] == 'Admin') {
+      Flight::render('admin/sidebar', [], 'sidebar');
+    } else if ($_SESSION['rolename'] == 'Faculty') {
+      Flight::render('faculty/sidebar', [], 'sidebar');
     }
     Flight::render('allVacanciesPagination', [], 'allVacanciesPagination');
     Flight::render('allVacanciesCard', [], 'allVacanciesCard');
@@ -640,6 +650,8 @@ class baseController
       Flight::render('faculty/sidebar', [], 'sidebar');
     } else if ($_SESSION['rolename'] == "Admin") {
       Flight::render('admin/sidebar', [], 'sidebar');
+    } else if ($_SESSION['rolename'] == "Faculty") {
+      Flight::render('faculty/sidebar', [], 'sidebar');
     }
 
     Flight::view()->set('alreadyApplied', $alreadyApplied);
