@@ -27,9 +27,10 @@ class adminController
     $_SESSION['adminPage'] = "dashboard";
 
     $db = Flight::db();
-    $stmt = $db->prepare('SELECT COUNT(*) as total FROM employer_job_posts WHERE is_draft = 0');
+    $stmt = $db->prepare('SELECT COUNT(*) as total FROM employer_job_posts');
     $stmt->execute();
     $res = $stmt->fetch(\PDO::FETCH_ASSOC);
+
 
     $numVacancies = $res['total'];
     Flight::view()->set('numVacancies', $numVacancies);

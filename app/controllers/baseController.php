@@ -646,9 +646,30 @@ class baseController
 
   public function viewProfile()
   {
+    $profileID = $_POST['profile'];
+    $db = Flight::db();
+    $stmt = $db->prepare('SELECT * FROM userdetails LEFT JOIN alumni_graduated_course ON userdetails.user_id = alumni_graduated_course.user_id JOIN campuses ON alumni_graduated_course.campus = campuses.campusID JOIN courses ON alumni_graduated_course.course_id = courses.courseID JOIN coursesmajor ON alumni_graduated_course.major_id = coursesmajor.major_id WHERE userdetails.user_id = :profileID');
+    $status = $stmt->execute(['profileID' => $profileID]);
+    $profileData = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    $stmt = $db->prepare('SELECT * FROM alumni_awards WHERE alumni_userID = :profileID');
+    $status = $stmt->execute(['profileID' => $profileID]);
+    $profileAwards = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    $stmt = $db->prepare('SELECT * FROM alumni_work_experience WHERE owner_id =  :profileID');
+    $status = $stmt->execute(['profileID' => $profileID]);
+    $profileWorkExp = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
     if ($_SESSION['rolename'] == "Employer") {
       Flight::render('employer/sidebar', [], 'sidebar');
     }
+
+    bdump($profileData);
+    bdump($profileAwards);
+    bdump($profileWorkExp);
+    Flight::view()->set('profileData', $profileData);
+    Flight::view()->set('profileAwards', $profileAwards);
+    Flight::view()->set('profileWorkExp', $profileWorkExp);
 
     Flight::render('header', [], 'header');
     $this->app->render('viewProfile', ['username' => $_SESSION['username']], 'home');

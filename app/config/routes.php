@@ -128,6 +128,8 @@ $router->group('/dashboard', function () use ($router, $app) {
     $router->post('/editWorkExp', [alumniController::class, 'editWorkExp'], false, 'alumniEditWorkExp');
     $router->post('/deleteWorkExp', [alumniController::class, 'deleteWorkExp'], false, 'alumniDeleteWorkExp');
     $router->post('/submitApp', [alumniController::class, 'submitApp'], false, 'alumniSubmitApp');
+    $router->get('/generateResume', [alumniController::class, 'generateResume'], false, 'alumniGenerateResume')->addMiddleware([new layoutDefault()]);
+    $router->post('/generateResumePDF', [alumniController::class, 'generateResumePDF'], false, 'alumniGenerateResumePDF');
 
     $router->get('/hello', function () {
       echo "hello";
