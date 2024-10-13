@@ -21,7 +21,6 @@ if (!isset($vacanciesData[$_GET['editBtnVal']])) {
                   <a href="<?= Flight::request()->base ?>/dashboard/employer/jobVacancies"><button type="button" class="btn btn-secondary">
                       Back</button></a>
                 </div>
-                <?= $locations ?>
                 <div class="row mb-2">
                   <div class="col">
                     <label for="position">Position</label>
@@ -32,58 +31,9 @@ if (!isset($vacanciesData[$_GET['editBtnVal']])) {
                     <input type="number" class="form-control" placeholder="Number of Vacancies" id="numVacancies" name="numVacancies" required value="<?php echo $vacanciesData[$_GET['editBtnVal']]['slot_available'] ?>">
                   </div>
                 </div>
+                <legend>Location</legend>
                 <hr class="border border-1 border-primary opacity-25">
-                <div class="row mb-2">
-                  <div class="col-12">
-                    <legend>Location of Deployment</legend>
-                  </div>
-                  <div class="col-6">
-                    <ul class="list-group">
-                      <li class="list-group-item">
-                        <input class="form-check-input me-1" type="checkbox" value="regionCheckVal" id="regionCheckbox" name="locationCheckboxes[]" <?php if ($vacanciesData[$_GET['editBtnVal']]['job_region']) {
-                                                                                                                                                      echo "checked";
-                                                                                                                                                    }
-                                                                                                                                                    ?>>
-                        <label class="form-check-label" for="regionCheckbox">Region</label>
-                      </li>
-                      <li class="list-group-item">
-                        <input class="form-check-input me-1" type="checkbox" value="provinceCheckVal" id="provinceCheckbox" name="locationCheckboxes[]" <?php if ($vacanciesData[$_GET['editBtnVal']]['job_province']) {
-                                                                                                                                                          echo "checked";
-                                                                                                                                                        }
-                                                                                                                                                        ?>>
-                        <label class="form-check-label" for="provinceCheckbox">Province</label>
-                      </li>
-                      <li class="list-group-item">
-                        <input class="form-check-input me-1" type="checkbox" value="municipalityCheckVal" id="municipalityCheckbox" name="locationCheckboxes[]" <?php if ($vacanciesData[$_GET['editBtnVal']]['job_municipality']) {
-                                                                                                                                                                  echo "checked";
-                                                                                                                                                                }
-                                                                                                                                                                ?>>
-                        <label class="form-check-label" for="municipalityCheckbox">Municipality</label>
-                      </li>
-                      <li class="list-group-item">
-                        <input class="form-check-input me-1" type="checkbox" value="barangayCheckVal" id="barangayCheckbox" name="locationCheckboxes[]" <?php if ($vacanciesData[$_GET['editBtnVal']]['job_barangay']) {
-                                                                                                                                                          echo "checked";
-                                                                                                                                                        }
-                                                                                                                                                        ?>>
-                        <label class="form-check-label" for="barangayCheckbox">Barangay</label>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="col-6">
-                    <select class="form-select " id="regions" disabled style="display:none" name="regions">
-                      <option selected="" disabled>Region</option>
-                    </select>
-                    <select class="form-select " id="provinces" disabled style="display:none" name="provinces">
-                      <option selected="" disabled>Province</option>
-                    </select>
-                    <select class="form-select " id="municipalities" disabled style="display:none" name="municipalities">
-                      <option selected="" disabled>Municipality</option>
-                    </select>
-                    <select class="form-select " id="barangays" disabled style="display:none" name="barangays">
-                      <option selected="" disabled>Barangay</option>
-                    </select>
-                  </div>
-                </div>
+                <?= $locations ?>
                 <hr class="border border-1 border-primary opacity-25">
                 <div class="row mb-2">
                   <div class="col-12">
@@ -268,96 +218,6 @@ if (!isset($vacanciesData[$_GET['editBtnVal']])) {
 
   let salaryFormat = document.getElementById("salaryFormat");
 
-  regionCheckbox.addEventListener('change', function() {
-    if (regionCheckbox.checked) {
-      document.getElementById('regions').disabled = false;
-
-      document.getElementById('regions').style.display = "block";
-
-    } else {
-      document.getElementById('regions').disabled = true;
-      document.getElementById('provinces').disabled = true;
-      document.getElementById('municipalities').disabled = true;
-      document.getElementById('barangays').disabled = true;
-
-      document.getElementById('regions').style.display = "none";
-      document.getElementById('provinces').style.display = "none";
-      document.getElementById('municipalities').style.display = "none";
-      document.getElementById('barangays').style.display = "none";
-
-      document.getElementById('provinceCheckbox').checked = false;
-      document.getElementById('municipalityCheckbox').checked = false;
-      document.getElementById('barangayCheckbox').checked = false;
-    }
-  })
-
-  provinceCheckbox.addEventListener('change', function() {
-    if (provinceCheckbox.checked) {
-      document.getElementById('provinces').disabled = false;
-      document.getElementById('regions').disabled = false;
-
-      document.getElementById('provinces').style.display = "block";
-      document.getElementById('regions').style.display = "block";
-
-      document.getElementById('regionCheckbox').checked = true;
-    } else {
-      document.getElementById('provinces').disabled = true;
-      document.getElementById('municipalities').disabled = true;
-      document.getElementById('barangays').disabled = true;
-
-      document.getElementById('provinces').style.display = "none";
-      document.getElementById('municipalities').style.display = "none";
-      document.getElementById('barangays').style.display = "none";
-
-      document.getElementById('municipalityCheckbox').checked = false;
-      document.getElementById('barangayCheckbox').checked = false;
-    }
-  })
-
-  municipalityCheckbox.addEventListener('change', function() {
-    if (municipalityCheckbox.checked) {
-      document.getElementById('provinces').disabled = false;
-      document.getElementById('regions').disabled = false;
-      document.getElementById('municipalities').disabled = false;
-
-      document.getElementById('provinces').style.display = "block";
-      document.getElementById('regions').style.display = "block";
-      document.getElementById('municipalities').style.display = "block";
-
-      document.getElementById('regionCheckbox').checked = true;
-      document.getElementById('provinceCheckbox').checked = true;
-    } else {
-      document.getElementById('municipalities').disabled = true;
-      document.getElementById('barangays').disabled = true;
-
-      document.getElementById('municipalities').style.display = "none";
-      document.getElementById('barangays').style.display = "none";
-
-      document.getElementById('barangayCheckbox').checked = false;
-    }
-  })
-
-  barangayCheckbox.addEventListener('change', function() {
-    if (barangayCheckbox.checked) {
-      document.getElementById('provinces').disabled = false;
-      document.getElementById('regions').disabled = false;
-      document.getElementById('municipalities').disabled = false;
-      document.getElementById('barangays').disabled = false;
-
-      document.getElementById('provinces').style.display = "block";
-      document.getElementById('regions').style.display = "block";
-      document.getElementById('municipalities').style.display = "block";
-      document.getElementById('barangays').style.display = "block";
-
-      document.getElementById('regionCheckbox').checked = true;
-      document.getElementById('provinceCheckbox').checked = true;
-      document.getElementById('municipalityCheckbox').checked = true;
-    } else {
-      document.getElementById('barangays').style.display = "none";
-
-      document.getElementById('barangays').disabled = true;
-    }
-  })
 
   fullTimeBtn.addEventListener('change', fullTimeBtnFunc());
 
@@ -486,122 +346,6 @@ if (!isset($vacanciesData[$_GET['editBtnVal']])) {
     document.getElementById("rangeMaxDiv").style.display = "none";
     document.getElementById("rangeMinDiv").style.display = "none";
     document.getElementById("phpHourDiv").style.display = "none";
-  }
-
-
-  $(document).ready(function() {
-    $.getJSON("<?= Flight::request()->base ?>/assets/locations.json", function(result) {
-      $.each(result, function(i, field) {
-        $('#regions').append(`<option value="${i}">
-                                       ${field.region_name}
-                                  </option>`);
-      });
-      if (regionCheckbox.checked) {
-        $('#regions').prop('disabled', false).show();
-        getProvinces($("#regions").val());
-      }
-      if (provinceCheckbox.checked) {
-        $('#provinces').prop('disabled', false).show();
-        getMunicipality($("#regions").val(), $("provinces").val());
-      }
-      if (municipalityCheckbox.checked) {
-        $('#municipalities').prop('disabled', false).show();
-        getBarangay($("#regions").val(), $("#provinces").val(), $("#municipalities").val());
-      }
-      if (barangayCheckbox.checked) {
-        $('#barangays').prop('disabled', false).show();
-      }
-
-
-      if (document.getElementById('regionCheckbox').checked) {
-        document.getElementById('regions').value = "<?php echo $vacanciesData[$_GET['editBtnVal']]['job_region']; ?>";
-      }
-      if (document.getElementById('provinceCheckbox').checked) {
-        document.getElementById('provinces').value = "<?php echo $vacanciesData[$_GET['editBtnVal']]['job_province']; ?>";
-      }
-      if (document.getElementById('municipalityCheckbox').checked) {
-        document.getElementById('municipalities').value = "<?php echo $vacanciesData[$_GET['editBtnVal']]['job_municipality']; ?>";
-      }
-      if (document.getElementById('barangayCheckbox').checked) {
-        document.getElementById('barangays').value = "<?php echo $vacanciesData[$_GET['editBtnVal']]['job_barangay']; ?>";
-      }
-    });
-    $("#regions").change(function() {
-      $('#provinces').empty();
-      $('#municipalities').empty();
-      $('#barangays').empty();
-      getProvinces($("#regions").val());
-    });
-
-    function getProvinces(region_name) {
-      $.getJSON("<?= Flight::request()->base ?>/assets/locations.json", function(result) {
-        console.log("Result: ", result);
-        console.log("Region name: ", region_name);
-        if (region_name) {
-          $.each(result[region_name].province_list, function(key, value) {
-            $('#provinces').append(`<option value="${key}">
-                                       ${key}
-                                  </option>`);
-          });
-          getMunicipality($("#regions").val(), $("#provinces").val());
-        }
-      });
-    }
-
-    $("#provinces").change(function() {
-      $('#municipalities').empty();
-      $('#barangays').empty();
-      getMunicipality($("#regions").val(), $("#provinces").val());
-    });
-
-    function getMunicipality(region_name, province_name) {
-      $.getJSON("<?= Flight::request()->base ?>/assets/locations.json", function(result) {
-        // console.log(result[region_name].province_list[province_name]);
-        console.log(province_name);
-        if (region_name && province_name) {
-          $.each(result[region_name].province_list[province_name].municipality_list, function(key, value) {
-            // console.log(key);
-            $('#municipalities').append(`<option value="${key}">
-                                       ${key}
-                                  </option>`);
-          });
-          getBarangay($("#regions").val(), $("#provinces").val(), $("#municipalities").val());
-        }
-      });
-    }
-
-    $("#municipalities").change(function() {
-      $('#barangays').empty();
-      getBarangay($("#regions").val(), $("#provinces").val(), $("#municipalities").val());
-    });
-
-    function getBarangay(region_name, province_name, municipality_name) {
-      $.getJSON("<?= Flight::request()->base ?>/assets/locations.json", function(result) {
-        // console.log(result[region_name].province_list[province_name].municipality_list[municipality_name].barangay_list);
-        if (region_name && province_name && municipality_name) {
-          $.each(result[region_name].province_list[province_name].municipality_list[municipality_name].barangay_list, function(key, value) {
-            // console.log(key);
-            $('#barangays').append(`<option value="${value}">
-                                       ${value}
-                                  </option>`);
-          });
-        }
-      });
-    }
-
-  });
-  if (document.getElementById('regionCheckbox').checked) {
-    document.getElementById('regions').value = '<?php echo $vacanciesData[$_GET['editBtnVal']]['job_region'] ?>';
-  }
-  if (document.getElementById('provinceCheckbox').checked) {
-    document.getElementById('provinces').value = '<?php echo $vacanciesData[$_GET['editBtnVal']]['job_province'] ?>';
-    console.log('<?php echo $vacanciesData[$_GET['editBtnVal']]['job_province'] ?>');
-  }
-  if (document.getElementById('municipalityCheckbox').checked) {
-    document.getElementById('municipalities').value = '<?php echo $vacanciesData[$_GET['editBtnVal']]['job_municipality'] ?>';
-  }
-  if (document.getElementById('barangayCheckbox').checked) {
-    document.getElementById('barangays').value = '<?php echo $vacanciesData[$_GET['editBtnVal']]['job_barangay'] ?>';
   }
 </script>
 

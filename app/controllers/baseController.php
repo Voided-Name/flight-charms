@@ -609,6 +609,16 @@ class baseController
     $status = $stmt->execute(["job_id" => $job_id]);
     $dataInstance = $stmt->fetch(\PDO::FETCH_ASSOC);
 
+
+    $stmt = $db->prepare("SELECT * FROM applications WHERE application_post_id = :job_id AND application_alumni_id = :userid");
+    $status = $stmt->execute(["job_id" => $job_id, "userid" => $_SESSION['userid']]);
+    if ($stmt->fetch(\PDO::FETCH_ASSOC)) {
+      $alreadyApplied = true;
+    } else {
+      $alreadyApplied = false;
+    }
+
+
     if ($_SESSION['rolename'] == "Alumni") {
       Flight::render('alumni/sidebar', [], 'sidebar');
     } else if ($_SESSION['rolename'] == "Employer") {
@@ -619,6 +629,7 @@ class baseController
       Flight::render('admin/sidebar', [], 'sidebar');
     }
 
+    Flight::view()->set('alreadyApplied', $alreadyApplied);
     Flight::view()->set('dataInstance', $dataInstance);
     Flight::render('header', [], 'header');
     $this->app->render('apply', ['username' => $_SESSION['username']], 'home');

@@ -1,5 +1,6 @@
-<?php foreach ($regions as $key => $region): ?>
-  <option value="<?= htmlspecialchars($key) ?>">
-    <?= htmlspecialchars($region['region_name']) ?>
+<?php bdump($region) ?>
+<?php foreach ($regions as $key => $regionInstance): ?>
+  <option value="<?= htmlspecialchars($key) ?>" <?php echo $region == $key ? "selected" : "" ?>>
+    <?= htmlspecialchars($regionInstance['region_name']) ?>
   </option>
 <?php endforeach; ?>

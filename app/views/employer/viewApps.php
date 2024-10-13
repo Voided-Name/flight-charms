@@ -68,19 +68,23 @@ if (isset($_SESSION['viewPostID'])) {
                 </thead>
                 <tbody>
                   <?php
+                  $index = 0;
                   foreach ($appsData as $appsDataInstance) {
-                    $alumniInstance = $func->select_one('userdetails', array('user_id', '=', $appsDataInstance['application_alumni_id']));
-                    $name = $alumniInstance[0]['last_name'] . ', ' . $alumniInstance[0]['first_name'] . ' ' . $alumniInstance[0]['middle_name'];
-                    $courseID = $func->select_one('alumni_graduated_course', array('user_id', '=', $appsDataInstance['application_alumni_id']));
-                    $course = $func->select_one('courses', array('courseID', '=', $courseID[0]['course_id']));
-                    $statusId = $func->selectall_where2('alumni_employment_status', array('status_post_id', '=', $appsDataInstance['application_post_id']), array('status_alumni_id', '=', $appsDataInstance['application_alumni_id']));
+                    bdump($appsInformation);
+                    $db = Flight::db();
+                    //$stmt = $db->prepare('SELECT * FROM userdetails WHERE user_id = :application_alumni_id');
+                    //$alumniInstance = $func->select_one('userdetails', array('user_id', '=', $appsDataInstance['application_alumni_id']));
+                    //$name = $alumniInstance[0]['last_name'] . ', ' . $alumniInstance[0]['first_name'] . ' ' . $alumniInstance[0]['middle_name'];
+                    //$courseID = $func->select_one('alumni_graduated_course', array('user_id', '=', $appsDataInstance['application_alumni_id']));
+                    //$course = $func->select_one('courses', array('courseID', '=', $courseID[0]['course_id']));
+                    //$statusId = $func->selectall_where2('alumni_employment_status', array('status_post_id', '=', $appsDataInstance['application_post_id']), array('status_alumni_id', '=', $appsDataInstance['application_alumni_id']));
                   ?>
                     <tr>
-                      <td><?php echo $name ?></td>
-                      <td><?php echo $course[0]['courseName'] ?></td>
+                      <td><?php echo $appsInformation[$index]['name'] ?></td>
+                      <td><?php echo $appsInformation[$index]['appsInformationCourse']['courseName'] ?></td>
                       <td>
                         <div class="d-flex align-items-center list-user-action">
-                          <form method="GET" action="viewResume.php" class="me-2">
+                          <form method="GET" action="<?= Flight::request()->base ?>/dashboard/employer/viewApps/viewFile" class="me-2">
                             <button type="submit" class="btn btn-primary" value="<?php echo $appsDataInstance['file_name'] ?>" name="viewResumeBtn">View File</button>
                           </form>
                           <form method="POST">
@@ -99,7 +103,7 @@ if (isset($_SESSION['viewPostID'])) {
                         </div>
                       </td>
                       <td>
-                        <p class="<?php switch ($statusId[0]['status']) {
+                        <p class="<?php switch ($appsInformation[$index]['appsInformationStatus']['employment_status']) {
                                     case 0:
                                       echo "bg-dark";
                                       break;
@@ -115,7 +119,7 @@ if (isset($_SESSION['viewPostID'])) {
                                       break;
                                   } ?> text-white p-1 text-center rounded">
                           <?php
-                          switch ($statusId[0]['status']) {
+                          switch ($appsInformation[$index]['appsInformationStatus']['employment_status']) {
                             case 0:
                               echo "Pending";
                               break;
@@ -134,6 +138,7 @@ if (isset($_SESSION['viewPostID'])) {
                       </td>
                     </tr>
                   <?php
+                    $index++;
                   }
                   ?>
                 </tbody>

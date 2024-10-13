@@ -29,14 +29,16 @@ $router->post('/login', [baseController::class, 'loginBtn']);
 
 Flight::route('/locations/regions', function () {
   $locations = json_decode(file_get_contents('assets/locations.json'), true);
-  Flight::render('regions.php', ['regions' => $locations]);
+  $region = Flight::request()->query->currentRegion;
+  Flight::render('regions.php', ['regions' => $locations, 'region' => $region]);
 });
 
 Flight::route('/locations/provinces', function () {
   $region = Flight::request()->query->regions;
   $locations = json_decode(file_get_contents('assets/locations.json'), true);
+  $currentProvince = Flight::request()->query->currentProvince;
   $provinces = $locations[$region]['province_list'] ?? [];
-  Flight::render('provinces.php', ['provinces' => $provinces]);
+  Flight::render('provinces.php', ['provinces' => $provinces, 'currentProvince' => $currentProvince]);
 });
 
 Flight::route('/locations/municipalities', function () {
@@ -44,10 +46,8 @@ Flight::route('/locations/municipalities', function () {
   $province = Flight::request()->query->provinces;
   $locations = json_decode(file_get_contents('assets/locations.json'), true);
   $municipalities = $locations[$region]['province_list'][$province]['municipality_list'] ?? [];
-  bdump($region);
-  bdump($province);
-  bdump($municipalities);
-  Flight::render('municipalities.php', ['municipalities' => $municipalities]);
+  $currentMunicipality = Flight::request()->query->currentMunicipality;
+  Flight::render('municipalities.php', ['municipalities' => $municipalities, 'currentMunicipality' => $currentMunicipality]);
 });
 
 Flight::route('/locations/barangays', function () {
@@ -56,11 +56,8 @@ Flight::route('/locations/barangays', function () {
   $municipality = Flight::request()->query->municipalities;
   $locations = json_decode(file_get_contents('assets/locations.json'), true);
   $barangays = $locations[$region]['province_list'][$province]['municipality_list'][$municipality]['barangay_list'] ?? [];
-  bdump($region);
-  bdump($province);
-  bdump($municipality);
-  bdump($barangays);
-  Flight::render('barangays.php', ['barangays' => $barangays]);
+  $currentBarangay = Flight::request()->query->currentBarangay;
+  Flight::render('barangays.php', ['barangays' => $barangays, 'currentBarangay' => $currentBarangay]);
 });
 
 
@@ -100,13 +97,14 @@ $router->group('/dashboard', function () use ($router, $app) {
 
   $router->group('/employer', function () use ($router, $app) {
     $router->get('/', [employerController::class, 'index'], false, 'employerHome')->addMiddleware([new layoutDefault()]);
-    $router->get('/createVacancy', [employerController::class, 'createVacancy', false, 'employerCreateVacancy'])->addMiddleware([new layoutDefault()]);
-    $router->post('/createVacancySubmit', [employerController::class, 'createVacancySubmit', false, 'employerCreateVacancySubmit']);
-    $router->get('/jobVacancies', [employerController::class, 'jobVacancies', false, 'employerJobVacancies'])->addMiddleware([new layoutDefault()]);
-    $router->get('/jobVacanciesEdit', [employerController::class, 'jobVacanciesEdit', false, 'employerJobVacanciesEdit'])->addMiddleware([new layoutDefault()]);
-    $router->post('/editJobVacancy', [employerController::class, 'editJobVacancy', false, 'employerEditJobVacancy']);
+    $router->get('/createVacancy', [employerController::class, 'createVacancy'], false, 'employerCreateVacancy')->addMiddleware([new layoutDefault()]);
+    $router->post('/createVacancySubmit', [employerController::class, 'createVacancySubmit'], false, 'employerCreateVacancySubmit');
+    $router->get('/jobVacancies', [employerController::class, 'jobVacancies'], false, 'employerJobVacancies')->addMiddleware([new layoutDefault()]);
+    $router->get('/jobVacanciesEdit', [employerController::class, 'jobVacanciesEdit'], false, 'employerJobVacanciesEdit')->addMiddleware([new layoutDefault()]);
+    $router->post('/editJobVacancy', [employerController::class, 'editJobVacancy'], false, 'employerEditJobVacancy');
     $router->get('/viewApps', [employerController::class, 'viewApps'], false, 'employerViewApps')->addMiddleware([new layoutDefault()]);
-    $router->get('/deleteVacancy', [employerController::class, 'deleteVacancy', false, 'employerDeleteVacancy']);
+    $router->get('/viewApps/viewFile', [employerController::class, 'viewAppsInstance'], false, 'employerViewAppsInstance');
+    $router->get('/deleteVacancy', [employerController::class, 'deleteVacancy'], false, 'employerDeleteVacancy');
     $router->get('/testLocation', function () {
       Flight::render('employer/locationTest');
     });
@@ -119,13 +117,14 @@ $router->group('/dashboard', function () use ($router, $app) {
   $router->group('/alumni', function () use ($router, $app) {
     $router->get('/', [alumniController::class, 'index'], false, 'alumnihome')->addMiddleware([new layoutDefault()]);
     $router->get('/awards', [alumniController::class, 'awards'], false, 'alumniAwards')->addMiddleware([new layoutDefault()]);
-    $router->post('/addAward', [alumniController::class, 'addAward', false, 'alumniAddAward']);
-    $router->post('/editAward', [alumniController::class, 'editAward', false, 'alumniEditAward']);
-    $router->post('/deleteAward', [alumniController::class, 'deleteAward', false, 'alumniDeleteAward']);
+    $router->post('/addAward', [alumniController::class, 'addAward'], false, 'alumniAddAward');
+    $router->post('/editAward', [alumniController::class, 'editAward'], false, 'alumniEditAward');
+    $router->post('/deleteAward', [alumniController::class, 'deleteAward'], false, 'alumniDeleteAward');
     $router->get('/workExp', [alumniController::class, 'workExp'], false, 'alumniWorkExp')->addMiddleware([new layoutDefault()]);
-    $router->post('/addWorkExp', [alumniController::class, 'addWorkExp', false, 'alumniAddWorkExp']);
-    $router->post('/editWorkExp', [alumniController::class, 'editWorkExp', false, 'alumniEditWorkExp']);
-    $router->post('/deleteWorkExp', [alumniController::class, 'deleteWorkExp', false, 'alumniDeleteWorkExp']);
+    $router->post('/addWorkExp', [alumniController::class, 'addWorkExp'], false, 'alumniAddWorkExp');
+    $router->post('/editWorkExp', [alumniController::class, 'editWorkExp'], false, 'alumniEditWorkExp');
+    $router->post('/deleteWorkExp', [alumniController::class, 'deleteWorkExp'], false, 'alumniDeleteWorkExp');
+    $router->post('/submitApp', [alumniController::class, 'submitApp'], false, 'alumniSubmitApp');
 
     $router->get('/hello', function () {
       echo "hello";

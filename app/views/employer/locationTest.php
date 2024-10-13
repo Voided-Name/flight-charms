@@ -65,100 +65,100 @@
 
   <script>
     // Enable or disable selects based on checkboxes
-    /*document.getElementById('regionCheckbox').addEventListener('change', function() {*/
-    /*  document.getElementById('regions').disabled = !this.checked;*/
-    /*  if (!this.checked) {*/
-    /*    document.getElementById('regions').innerHTML = '';*/
-    /*    document.getElementById('provinces').innerHTML = '';*/
-    /*    document.getElementById('municipalities').innerHTML = '';*/
-    /*    document.getElementById('barangays').innerHTML = '';*/
-    /**/
-    /*    document.getElementById('provinces').disabled = true;*/
-    /*    document.getElementById('provinceCheckbox').checked = false;*/
-    /**/
-    /*    document.getElementById('municipalities').disabled = true;*/
-    /*    document.getElementById('municipalityCheckbox').checked = false;*/
-    /**/
-    /*    document.getElementById('barangays').disabled = true;*/
-    /*    document.getElementById('barangayCheckbox').checked = false;*/
-    /**/
-    /*    document.getElementById('provinces').hidden = true;*/
-    /*    document.getElementById('provinceCheckbox').hidden = true;*/
-    /**/
-    /*    document.getElementById('municipalities').hidden = true;*/
-    /*    document.getElementById('municipalityCheckbox').hidden = true;*/
-    /*  } else {*/
-    /*    document.getElementById('provinces').hidden = false;*/
-    /*    document.getElementById('provinceCheckbox').hidden = false;*/
-    /*  }*/
-    /*});*/
-    /**/
-    /*document.getElementById('provinceCheckbox').addEventListener('change', function() {*/
-    /*  document.getElementById('provinces').disabled = !this.checked;*/
-    /*  if (!this.checked) {*/
-    /*    document.getElementById('provinces').innerHTML = '';*/
-    /*    document.getElementById('municipalities').innerHTML = '';*/
-    /*    document.getElementById('barangays').innerHTML = '';*/
-    /**/
-    /**/
-    /*    document.getElementById('municipalities').disabled = true;*/
-    /*    document.getElementById('municipalityCheckbox').checked = false;*/
-    /**/
-    /*    document.getElementById('barangays').disabled = true;*/
-    /*    document.getElementById('barangayCheckbox').checked = false;*/
-    /**/
-    /*    document.getElementById('municipalities').hidden = true;*/
-    /*    document.getElementById('municipalityCheckbox').hidden = true;*/
-    /**/
-    /*    document.getElementById('barangays').hidden = true;*/
-    /*    document.getElementById('barangayCheckbox').hidden = true;*/
-    /*  } else {*/
-    /*    document.getElementById('regions').disabled = false;*/
-    /*    document.getElementById('regionCheckbox').checked = true;*/
-    /**/
-    /*    document.getElementById('municipalities').hidden = false;*/
-    /*    document.getElementById('municipalityCheckbox').hidden = false;*/
-    /*  }*/
-    /*});*/
-    /**/
-    /*document.getElementById('municipalityCheckbox').addEventListener('change', function() {*/
-    /*  document.getElementById('municipalities').disabled = !this.checked;*/
-    /*  if (!this.checked) {*/
-    /*    document.getElementById('municipalities').innerHTML = '';*/
-    /*    document.getElementById('barangays').innerHTML = '';*/
-    /**/
-    /*    document.getElementById('barangays').disabled = true;*/
-    /*    document.getElementById('barangayCheckbox').checked = false;*/
-    /**/
-    /*    document.getElementById('barangays').hidden = true;*/
-    /*    document.getElementById('barangayCheckbox').hidden = true;*/
-    /*  } else {*/
-    /*    document.getElementById('regions').disabled = false;*/
-    /*    document.getElementById('regionCheckbox').checked = true;*/
-    /**/
-    /*    document.getElementById('provinces').disabled = false;*/
-    /*    document.getElementById('provinceCheckbox').checked = true;*/
-    /**/
-    /*    document.getElementById('barangays').hidden = false;*/
-    /*    document.getElementById('barangayCheckbox').hidden = false;*/
-    /*  }*/
-    /*});*/
-    /**/
-    /*document.getElementById('barangayCheckbox').addEventListener('change', function() {*/
-    /*  document.getElementById('barangays').disabled = !this.checked;*/
-    /*  if (!this.checked) {*/
-    /*    document.getElementById('barangays').innerHTML = '';*/
-    /*  } else {*/
-    /*    document.getElementById('regions').disabled = false;*/
-    /*    document.getElementById('regionCheckbox').checked = true;*/
-    /**/
-    /*    document.getElementById('provinces').disabled = false;*/
-    /*    document.getElementById('provinceCheckbox').checked = true;*/
-    /**/
-    /*    document.getElementById('municipalities').disabled = false;*/
-    /*    document.getElementById('municipalityCheckbox').checked = true;*/
-    /*  }*/
-    /*});*/
+    document.getElementById('regionCheckbox').addEventListener('change', function() {
+      document.getElementById('regions').disabled = !this.checked;
+      if (!this.checked) {
+        document.getElementById('regions').innerHTML = '';
+        document.getElementById('provinces').innerHTML = '';
+        document.getElementById('municipalities').innerHTML = '';
+        document.getElementById('barangays').innerHTML = '';
+
+        document.getElementById('provinces').disabled = true;
+        document.getElementById('provinceCheckbox').checked = false;
+
+        document.getElementById('municipalities').disabled = true;
+        document.getElementById('municipalityCheckbox').checked = false;
+
+        document.getElementById('barangays').disabled = true;
+        document.getElementById('barangayCheckbox').checked = false;
+
+        document.getElementById('provinces').hidden = true;
+        document.getElementById('provinceCheckbox').hidden = true;
+
+        document.getElementById('municipalities').hidden = true;
+        document.getElementById('municipalityCheckbox').hidden = true;
+      } else {
+        document.getElementById('provinces').hidden = false;
+        document.getElementById('provinceCheckbox').hidden = false;
+      }
+    });
+
+    document.getElementById('provinceCheckbox').addEventListener('change', function() {
+      document.getElementById('provinces').disabled = !this.checked;
+      if (!this.checked) {
+        document.getElementById('provinces').innerHTML = '';
+        document.getElementById('municipalities').innerHTML = '';
+        document.getElementById('barangays').innerHTML = '';
+
+
+        document.getElementById('municipalities').disabled = true;
+        document.getElementById('municipalityCheckbox').checked = false;
+
+        document.getElementById('barangays').disabled = true;
+        document.getElementById('barangayCheckbox').checked = false;
+
+        document.getElementById('municipalities').hidden = true;
+        document.getElementById('municipalityCheckbox').hidden = true;
+
+        document.getElementById('barangays').hidden = true;
+        document.getElementById('barangayCheckbox').hidden = true;
+      } else {
+        document.getElementById('regions').disabled = false;
+        document.getElementById('regionCheckbox').checked = true;
+
+        document.getElementById('municipalities').hidden = false;
+        document.getElementById('municipalityCheckbox').hidden = false;
+      }
+    });
+
+    document.getElementById('municipalityCheckbox').addEventListener('change', function() {
+      document.getElementById('municipalities').disabled = !this.checked;
+      if (!this.checked) {
+        document.getElementById('municipalities').innerHTML = '';
+        document.getElementById('barangays').innerHTML = '';
+
+        document.getElementById('barangays').disabled = true;
+        document.getElementById('barangayCheckbox').checked = false;
+
+        document.getElementById('barangays').hidden = true;
+        document.getElementById('barangayCheckbox').hidden = true;
+      } else {
+        document.getElementById('regions').disabled = false;
+        document.getElementById('regionCheckbox').checked = true;
+
+        document.getElementById('provinces').disabled = false;
+        document.getElementById('provinceCheckbox').checked = true;
+
+        document.getElementById('barangays').hidden = false;
+        document.getElementById('barangayCheckbox').hidden = false;
+      }
+    });
+
+    document.getElementById('barangayCheckbox').addEventListener('change', function() {
+      document.getElementById('barangays').disabled = !this.checked;
+      if (!this.checked) {
+        document.getElementById('barangays').innerHTML = '';
+      } else {
+        document.getElementById('regions').disabled = false;
+        document.getElementById('regionCheckbox').checked = true;
+
+        document.getElementById('provinces').disabled = false;
+        document.getElementById('provinceCheckbox').checked = true;
+
+        document.getElementById('municipalities').disabled = false;
+        document.getElementById('municipalityCheckbox').checked = true;
+      }
+    });
   </script>
 
 </body>

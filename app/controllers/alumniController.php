@@ -193,69 +193,43 @@ class alumniController
     Flight::redirect(Flight::request()->base . '/dashboard/alumni/workExp');
   }
 
-  public function apply()
+  public function submitApp()
   {
-    /*if ($_SERVER['REQUEST_METHOD'] == 'POST') {*/
-    /*  if (isset($_POST['submitApp'])) {*/
-    /*    $test = "hello";*/
-    /*    // Directory where you want to save the uploaded files*/
-    /*    $targetDirectory = "../files/";*/
-    /**/
-    /*    $uniqueID = uniqid(); // Generates a unique ID based on the current time in microseconds*/
-    /*    $targetFile = $targetDirectory . $uniqueID . "_" . basename($_FILES["formFile"]["name"]);*/
-    /**/
-    /**/
-    /*    // Flag to check if everything is okay*/
-    /*    $uploadOk = 1;*/
-    /**/
-    /*    // Get file extension*/
-    /*    $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));*/
-    /**/
-    /*    // Check if the file already exists*/
-    /*    if (file_exists($targetFile)) {*/
-    /*      //echo "Sorry, file already exists.";*/
-    /*      $uploadOk = 0;*/
-    /*    }*/
-    /**/
-    /*    // Check file size (limit set to 5MB)*/
-    /*    /* if ($_FILES["fileUpload"]["size"] > 5000000) { */
-    /*    /*   echo "Sorry, your file is too large."; */
-    /*    /*   $uploadOk = 0; */
-    /*    /* } */
-    /*    /**/
-    /**/
-    /*    // Allow certain file formats (e.g., jpg, png, gif, pdf)*/
-    /*    $allowedFileTypes = array("pdf");*/
-    /*    if (!in_array($fileType, $allowedFileTypes)) {*/
-    /*      //echo "Sorry, only JPG, JPEG, PNG, GIF, & PDF files are allowed." . $fileType;*/
-    /*      $uploadOk = 0;*/
-    /*    }*/
-    /**/
-    /*    // Check if $uploadOk is set to 0 by an error*/
-    /*    if ($uploadOk == 0) {*/
-    /*      //echo "Sorry, your file was not uploaded." . $targetFile;*/
-    /*    } else {*/
-    /*      // Attempt to move the uploaded file to the target directory*/
-    /*      if (move_uploaded_file($_FILES["formFile"]["tmp_name"], $targetFile)) {*/
-    /*        //echo "The file " . htmlspecialchars(basename($_FILES["formFile"]["name"])) . " has been uploaded.";*/
-    /**/
-    /*        $func->insert('applications', array(*/
-    /*          'file_name' => $targetFile,*/
-    /*          'application_post_id' => $_POST['submitApp'],*/
-    /*          'application_alumni_id' => $_SESSION['userid'],*/
-    /*        ));*/
-    /**/
-    /*        $func->insert('alumni_employment_status', array(*/
-    /*          'status_post_id' => $_POST['submitApp'],*/
-    /*          'status_alumni_id' => $_SESSION['userid'],*/
-    /*          'status' => 0,*/
-    /*        ));*/
-    /*      } else {*/
-    /*        //echo "Sorry, there was an error uploading your file.";*/
-    /*      }*/
-    /*    }*/
-    /*  }*/
+    if (isset($_POST['submitApp'])) {
+      $targetDirectory = __DIR__ . "/../../public/assets/applicationFiles/";
+      $uniqueID = uniqid();
+      $targetFile = $targetDirectory . $uniqueID . "_" . basename($_FILES["formFile"]["name"]);
+
+      $uploadOk = 1;
+
+
+      $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+      if (file_exists($targetFile)) {
+        $uploadOk = 0;
+      }
+
+      $allowedFileTypes = array("pdf");
+      if (!in_array($fileType, $allowedFileTypes)) {
+        $uploadOk = 0;
+      }
+
+      if ($uploadOk == 0) {
+      } else {
+        bdump(($_FILES["formFile"]["tmp_name"]));
+        bdump($targetFile);
+        if (move_uploaded_file($_FILES["formFile"]["tmp_name"], $targetFile)) {
+          $db = Flight::db();
+          $stmt = $db->prepare("INSERT  INTO applications (file_name, application_post_id, application_alumni_id) VALUES (:targetFile, :submitApp, :userid )");
+          $status = $stmt->execute(["targetFile" => $targetFile, 'submitApp' => $_POST['submitApp'], 'userid' => $_SESSION['userid']]);
+
+          $stmt = $db->prepare("INSERT INTO alumni_employment_status (status_post_id, status_alumni_id, employment_status) VALUES (:submitApp, :userid, 0)");
+          $status = $stmt->execute(['submitApp' => $_POST['submitApp'], 'userid' => $_SESSION['userid']]);
+        } else {
+        }
+      }
+    }
   }
+
   public function bak()
   {
     $_SESSION['alumniPage'] = "workExp";

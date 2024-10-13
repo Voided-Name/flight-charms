@@ -1,5 +1,6 @@
 <?php
 
+bdump($alreadyApplied);
 bdump($dataInstance);
 if (isset($_POST['applyButton'])) {
   $_SESSION['applyId'] = $_POST['applyButton'];
@@ -141,7 +142,7 @@ if ($dataInstance['job_type'] == '000000') {
         <div class="card">
           <div class="card-body px-0 m-0 px-5">
             <div class="container w-100">
-              <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
+              <button type="button" class="btn btn-secondary" onclick="window.history.back()">Back</button>
               <hr>
               <?php
               ?>
@@ -253,8 +254,8 @@ if ($dataInstance['job_type'] == '000000') {
               <p class="text-dark"><?php echo $dataInstance['job_description']; ?></p>
               <hr class="border border-1">
               <!-- Button trigger modal -->
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applyModal">
-                Apply
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#applyModal" <?php echo $alreadyApplied ? "disabled" : ""; ?>>
+                Apply <?php echo $alreadyApplied ? "(Applied Already)" : "" ?>
               </button>
 
               <!-- Modal -->
@@ -273,7 +274,7 @@ if ($dataInstance['job_type'] == '000000') {
                         <li>Work Experience</li>
                         <li>Soft Skills</li>
                       </ul>
-                      <form method="POST" enctype="multipart/form-data">
+                      <form method="POST" action="submitApp" enctype="multipart/form-data">
                         <label for=" formFile" class="form-label">Resume</label>
                         <input class="form-control" type="file" id="resumeFile" name="formFile" accept=".pdf">
                     </div>

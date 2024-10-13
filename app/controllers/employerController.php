@@ -313,11 +313,58 @@ class employerController
     $stmt = $db->prepare("SELECT * FROM applications WHERE application_post_id = :job_id");
     $status = $stmt->execute(['job_id' => $_GET['viewBtnVal']]);
     $appsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    $appsInformation = [];
+
+    foreach ($appsData as $appsDataInstance) {
+      $stmt = $db->prepare('SELECT * FROM userdetails WHERE user_id = :application_alumni_id');
+      $status = $stmt->execute(['application_alumni_id' => $appsDataInstance['application_alumni_id']]);
+      $appsInformationUserdetails = $stmt->fetch(\PDO::FETCH_ASSOC);
+      $name = $appsInformationUserdetails['last_name'] . ', ' . $appsInformationUserdetails['first_name'] . ', ' . $appsInformationUserdetails['middle_name'];
+      //$name = $alumniInstance[0]['last_name'] . ', ' . $alumniInstance[0]['first_name'] . ' ' . $alumniInstance[0]['middle_name'];
+
+      $stmt = $db->prepare('SELECT * FROM alumni_graduated_course WHERE user_id = :application_alumni_id');
+      $status = $stmt->execute(['application_alumni_id' => $appsDataInstance['application_alumni_id']]);
+      $appsInformationCourseID = $stmt->fetch(\PDO::FETCH_ASSOC);
+      //$courseID = $func->select_one('alumni_graduated_course', array('user_id', '=', $appsDataInstance['application_alumni_id']));
+
+      $stmt = $db->prepare('SELECT * FROM courses WHERE courseID = :courseID');
+      $status = $stmt->execute(['courseID' => $appsInformationCourseID['course_id']]);
+      $appsInformationCourse = $stmt->fetch(\PDO::FETCH_ASSOC);
+      //$course = $func->select_one('courses', array('courseID', '=', $courseID[0]['course_id']));
+
+      $stmt = $db->prepare('SELECT * FROM alumni_employment_status WHERE status_alumni_id = :application_alumni_id');
+      $status = $stmt->execute(['application_alumni_id' => $appsDataInstance['application_alumni_id']]);
+      $appsInformationStatus = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+      array_push(
+        $appsInformation,
+        array(
+          "appsInformationCourse" => $appsInformationCourse,
+          "appsInformationCourseID" => $appsInformationCourseID,
+          "appsInformationStatus" => $appsInformationStatus,
+          "appsInformationUserdetails" => $appsInformationUserdetails,
+          "name" => $name,
+        )
+      );
+    }
+
+
 
     Flight::view()->set("appsData", $appsData);
+    Flight::view()->set("appsInformation", $appsInformation);
     Flight::render('header', [], 'header');
     Flight::render('employer/sidebar', [], 'sidebar');
     $this->app->render('employer/viewApps', ['username' => $_SESSION['username']], 'home');
+    fopen(__DIR__ . '/../../public/assets/applicationFiles/670b3b8179e09_asynch_activity_ITSA01.pdf', 'r');
+  }
+
+  public function viewAppsInstance()
+  {
+    $file = $_GET['viewResumeBtn'];
+    header("Content-type: application/pdf");
+    header("Content-Disposition: inline; filename=filename.pdf");
+    readfile($file);
+    echo error_get_last();
   }
 
   public function deleteVacancy()
