@@ -1,6 +1,6 @@
 <nav class="nav navbar navbar-expand-lg navbar-light iq-navbar">
   <div class="container-fluid navbar-inner">
-    <a href="<?= Flight::request()->base ?>" class="navbar-brand">
+    <a href="" class="navbar-brand">
       <h4 class="logo-title">CICT CHARM</h4>
     </a>
     <div class="sidebar-toggle" data-toggle="sidebar" data-active="true">

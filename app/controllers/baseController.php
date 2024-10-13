@@ -136,6 +136,19 @@ class baseController
     }
   }
 
+  public function announcements()
+  {
+    $db = Flight::db();
+    $stmt = $db->prepare('SELECT * FROM announcements ORDER BY announcement_date DESC');
+    $status = $stmt->execute();
+    $announcementData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    Flight::view()->set('announcementData', $announcementData);
+
+    $this->app->render('announcements');
+  }
+
+
   public function registerEmployer() {}
   public function registerFaculty() {}
 

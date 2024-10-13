@@ -5,6 +5,7 @@ use app\controllers\baseController;
 use app\controllers\adminController;
 use app\controllers\alumniController;
 use app\controllers\employerController;
+use app\controllers\facultyController;
 use app\middlewares\guard;
 use app\middlewares\layoutDefault;
 use flight\Engine;
@@ -26,6 +27,7 @@ $router->get('/register', [baseController::class, 'register']);
 $router->post('/register', [baseController::class, 'registerBtn']);
 $router->get('/login', [baseController::class, 'login']);
 $router->post('/login', [baseController::class, 'loginBtn']);
+$router->get('/announcements', [baseController::class, 'announcements']);
 
 Flight::route('/locations/regions', function () {
   $locations = json_decode(file_get_contents('assets/locations.json'), true);
@@ -89,9 +91,14 @@ $router->group('/dashboard', function () use ($router, $app) {
   }, [new guard('Admin')]);
 
   // Faculty Dashboard
-  $router->get('/faculty', function () use ($app) {
-    $app->render('faculty/home', ['username' => $_SESSION['username']]);
-  })->addMiddleware([new guard('Faculty')]);
+  $router->group('/faculty', function () use ($router, $app) {
+    $router->get('/', [facultyController::class, 'index'], false, 'facultyHome')->addMiddleware([new layoutDefault()]);
+    $router->get('/postAnnouncement', [facultyController::class, 'postAnnouncement'], false, 'facultyPostAnnouncement')->addMiddleware([new layoutDefault()]);
+    $router->post('/announcementEdit', [facultyController::class, 'editAnnouncement'], false, 'facultyEditAnnouncement');
+    $router->post('/deleteAnnouncement', [facultyController::class, 'deleteAnnouncement'], false, 'facultyDeleteAnnouncement');
+    $router->post('/postAnnouncementMethod', [facultyController::class, 'postAnnouncementMethod'], false, 'facultyPostAnnouncementMethod');
+    $router->get('/postAnnouncementManage', [facultyController::class, 'postAnnouncementManage'], false, 'facultyPostAnnouncementManage')->addMiddleware([new layoutDefault()]);
+  }, [new guard('Faculty')]);
 
   // Employer Dashboard
 
