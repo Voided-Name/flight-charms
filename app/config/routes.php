@@ -103,7 +103,10 @@ $router->group('/dashboard', function () use ($router, $app) {
     $router->get('/jobVacanciesEdit', [employerController::class, 'jobVacanciesEdit'], false, 'employerJobVacanciesEdit')->addMiddleware([new layoutDefault()]);
     $router->post('/editJobVacancy', [employerController::class, 'editJobVacancy'], false, 'employerEditJobVacancy');
     $router->get('/viewApps', [employerController::class, 'viewApps'], false, 'employerViewApps')->addMiddleware([new layoutDefault()]);
+    $router->post('/viewProfile', [baseController::class, 'viewProfile'], false, 'employerViewProfile')->addMiddleware([new layoutDefault()]);
     $router->get('/viewApps/viewFile', [employerController::class, 'viewAppsInstance'], false, 'employerViewAppsInstance');
+    $router->post('/viewApps/employ', [employerController::class, 'viewAppsEmploy'], false, 'employerViewAppsEmploy');
+    $router->post('/viewApps/reject', [employerController::class, 'viewAppsReject'], false, 'employerViewAppsReject');
     $router->get('/deleteVacancy', [employerController::class, 'deleteVacancy'], false, 'employerDeleteVacancy');
     $router->get('/testLocation', function () {
       Flight::render('employer/locationTest');

@@ -364,7 +364,32 @@ class employerController
     header("Content-type: application/pdf");
     header("Content-Disposition: inline; filename=filename.pdf");
     readfile($file);
-    echo error_get_last();
+  }
+
+  public function viewAppsEmploy()
+  {
+
+    $alumniID = $_POST['alumniId'];
+    $postID = $_POST['postId'];
+    $viewBtnVal = $_POST['viewBtnVal'];
+    $db = Flight::db();
+    $stmt = $db->prepare("UPDATE alumni_employment_status SET employment_status = 1 WHERE status_alumni_id = :alumni_id AND status_post_id = :post_id");
+    $status = $stmt->execute(['alumni_id' => $alumniID, 'post_id' => $postID]);
+
+    header("Refresh:0; url=" . Flight::request()->base . "/dashboard/employer/viewApps?viewBtnVal=" . $viewBtnVal);
+  }
+
+  public function viewAppsReject()
+  {
+
+    $alumniID = $_POST['alumniId'];
+    $postID = $_POST['postId'];
+    $viewBtnVal = $_POST['viewBtnVal'];
+    $db = Flight::db();
+    $stmt = $db->prepare("UPDATE alumni_employment_status SET employment_status = 2 WHERE status_alumni_id = :alumni_id AND status_post_id = :post_id");
+    $status = $stmt->execute(['alumni_id' => $alumniID, 'post_id' => $postID]);
+
+    header("Refresh:0; url=" . Flight::request()->base . "/dashboard/employer/viewApps?viewBtnVal=" . $viewBtnVal);
   }
 
   public function deleteVacancy()

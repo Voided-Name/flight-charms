@@ -643,4 +643,14 @@ class baseController
     Flight::view()->set('barangay', $barangay);
     Flight::render('locations', [], 'locations');
   }
+
+  public function viewProfile()
+  {
+    if ($_SESSION['rolename'] == "Employer") {
+      Flight::render('employer/sidebar', [], 'sidebar');
+    }
+
+    Flight::render('header', [], 'header');
+    $this->app->render('viewProfile', ['username' => $_SESSION['username']], 'home');
+  }
 }

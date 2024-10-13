@@ -87,18 +87,20 @@ if (isset($_SESSION['viewPostID'])) {
                           <form method="GET" action="<?= Flight::request()->base ?>/dashboard/employer/viewApps/viewFile" class="me-2">
                             <button type="submit" class="btn btn-primary" value="<?php echo $appsDataInstance['file_name'] ?>" name="viewResumeBtn">View File</button>
                           </form>
-                          <form method="POST">
+                          <form method="POST" action="<?= Flight::request()->base ?>/dashboard/employer/viewApps/employ">
+                            <input type="hidden" name="viewBtnVal" value="<?php echo $_GET['viewBtnVal'] ?>">
                             <input type="hidden" name="postId" value="<?php echo $appsDataInstance['application_post_id'] ?>">
                             <input type="hidden" name="alumniId" value="<?php echo $appsDataInstance['application_alumni_id'] ?>">
                             <button type="submit" class="btn btn-success me-2" value="<?php echo $appsDataInstance['application_alumni_id'] ?>" name="employApplicant">Employ</button>
                           </form>
-                          <form method="POST">
+                          <form method="POST" action="<?= Flight::request()->base ?>/dashboard/employer/viewApps/reject">
+                            <input type="hidden" name="viewBtnVal" value="<?php echo $_GET['viewBtnVal'] ?>">
                             <input type="hidden" name="postId" value="<?php echo $appsDataInstance['application_post_id'] ?>">
                             <input type="hidden" name="alumniId" value="<?php echo $appsDataInstance['application_alumni_id'] ?>">
                             <button type="submit" class="btn btn-danger me-2" value="<?php echo $appsDataInstance['application_alumni_id'] ?>" name="rejectApplicant">Reject</button>
                           </form>
-                          <form method="POST" action="viewProfile.php">
-                            <button type="submit" class="btn btn-info" value="<?php echo $appsDataInstance['application_alumni_id'] ?>" name="viewProfileBtn">View Profile</button>
+                          <form method="POST" action="<?= Flight::request()->base ?>/dashboard/employer/viewProfile">
+                            <button type="submit" class="btn btn-info" name="profile" value="<?php echo $appsDataInstance['application_alumni_id'] ?>" name="viewProfileBtn">View Profile</button>
                           </form>
                         </div>
                       </td>
