@@ -267,7 +267,6 @@ class alumniController
 
   public function generateResumePDF()
   {
-
     $db = Flight::db();
     $stmt = $db->prepare("SELECT * FROM userdetails WHERE user_id = :userid");
     $status = $stmt->execute(['userid' => $_SESSION['userid']]);

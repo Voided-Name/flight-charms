@@ -242,7 +242,21 @@ class baseController
       }
     } else if ($loggedUnverified) {
       $_SESSION['login_unverified'] = true;
-      $this->app->redirect(Flight::request()->base . '/verifying');
+
+      switch ($_SESSION['role']) {
+        case "4":
+          $this->app->redirect(Flight::request()->base . '/verifying/admin');
+          break;
+        case "3":
+          $this->app->redirect(Flight::request()->base . '/verifying/faculty');
+          break;
+        case "2":
+          $this->app->redirect(Flight::request()->base . '/verifying/employer');
+          break;
+        case "1":
+          $this->app->redirect(Flight::request()->base . '/verifying/alumni');
+          break;
+      }
     }
     // Render the login view
     $this->app->render('login', [
@@ -698,5 +712,45 @@ class baseController
 
     Flight::render('header', [], 'header');
     $this->app->render('viewProfile', ['username' => $_SESSION['username']], 'home');
+  }
+
+  public function verifyingAlumni()
+  {
+    session_start();
+
+
+    $db = Flight::db();
+    $stmt = $db->prepare('SELECT * FROM companies');
+    $status = $stmt->execute();
+
+
+
+    if ($_SESSION['role'] == 1) {
+      $stmt = $db->prepare("SELECT * FROM users LEFT JOIN userdetails ON users.id =  userdetails.user_id LEFT JOIN alumni_graduated_course ON userdetails.user_id = alumni_graduated_course.user_id WHERE users.id = :userid");
+      $status = $stmt->execute(['userid' => $_SESSION['userid']]);
+      $alumniData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+      $stmt = $db->prepare('SELECT * FROM courses');
+      $status = $stmt->execute();
+      $courses = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+      $stmt = $db->prepare('SELECT * FROM campuses');
+      $status = $stmt->execute();
+      $campuses = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+      $stmt = $db->prepare('SELECT * FROM coursesmajor');
+      $status = $stmt->execute();
+      $majors = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+      $mapMajors = array_combine(array_column($majors, 'majorName'), array_column($majors, 'major_id'));
+
+      Flight::view()->set('alumniData', $alumniData);
+      Flight::view()->set('campuses', $campuses);
+      Flight::view()->set('courses', $courses);
+      Flight::view()->set('majors', $majors);
+      Flight::view()->set('mapMajors', $mapMajors);
+    }
+
+    $this->app->render('verifying');
   }
 }

@@ -28,6 +28,7 @@ $router->post('/register', [baseController::class, 'registerBtn']);
 $router->get('/login', [baseController::class, 'login']);
 $router->post('/login', [baseController::class, 'loginBtn']);
 $router->get('/announcements', [baseController::class, 'announcements']);
+$router->get('/verifying/alumni', [baseController::class, 'verifyingAlumni']);
 
 Flight::route('/locations/regions', function () {
   $locations = json_decode(file_get_contents('assets/locations.json'), true);
