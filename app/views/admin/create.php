@@ -777,13 +777,10 @@ $regionInformation['NCR'] = 'NCR';
   }
 
   document.body.addEventListener('htmx:afterRequest', function(event) {
-    // Get the response text
     const responseText = event.detail.xhr.responseText;
 
-    // Get the URL of the request
     const requestURL = event.detail.xhr.responseURL;
 
-    // Get the element that triggered the request
     const triggeringElement = event.detail.elt;
 
     if (triggeringElement.id == "alumniEmail") {
@@ -841,9 +838,6 @@ $regionInformation['NCR'] = 'NCR';
         });
       }
     }
-
-
-
   });
 
   function validateAlumniPasswords(event) {

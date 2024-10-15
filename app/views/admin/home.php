@@ -39,9 +39,45 @@
           <a href="<?= Flight::request()->base ?>/dashboard/admin/list" class="col-md-12 col-lg-5 btn btn-secondary p-2 m-2 fs-1">
             List of Users
           </a>
-          <a href="<?= Flight::request()->base ?>/dashboard/admin/generate" class="col-md-12 col-lg-5 btn btn-success p-2 m-2 fs-1">
+          <button type="button" class=" col-md-12 col-lg-5 btn btn-primary p-2 m-2 fs-1" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Generate Report
-          </a>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Generate Report</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="POST" action="admin/generateReport">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="reportValues[]" value="users" id="techHtml">
+                <label class="form-check-label" for="techHtml">
+                  List of Users
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="reportValues[]" value="vacancies" id="techCss">
+                <label class="form-check-label" for="techCss">
+                  Vacancies
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="reportValues[]" value="applications" id="techJs">
+                <label class="form-check-label" for="techJs">
+                  Applications
+                </label>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+          </form>
         </div>
       </div>
     </div>

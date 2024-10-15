@@ -29,6 +29,11 @@ $router->get('/login', [baseController::class, 'login']);
 $router->post('/login', [baseController::class, 'loginBtn']);
 $router->get('/announcements', [baseController::class, 'announcements']);
 $router->get('/verifying/alumni', [baseController::class, 'verifyingAlumni']);
+$router->get('/verifying/faculty', [baseController::class, 'verifyingFaculty']);
+$router->get('/verifying/employer', [baseController::class, 'verifyingEmployer']);
+$router->post('/verifying/verifyingAlumniSave', [baseController::class, 'verifyingAlumniSave']);
+$router->post('/verifying/verifyingFacultySave', [baseController::class, 'verifyingFacultySave']);
+$router->post('/verifying/verifyingEmployerSave', [baseController::class, 'verifyingEmployerSave']);
 
 Flight::route('/locations/regions', function () {
   $locations = json_decode(file_get_contents('assets/locations.json'), true);
@@ -80,6 +85,7 @@ $router->group('/dashboard', function () use ($router, $app) {
     $router->post('/createAlumni', [adminController::class, 'createAlumni'], false, 'adminCreateAlumni');
     $router->post('/createEmployer', [adminController::class, 'createEmployer'], false, 'adminCreateEmployer');
     $router->post('/createFaculty', [adminController::class, 'createFaculty'], false, 'adminCreateFaculty');
+    $router->post('/generateReport', [adminController::class, 'generateReport'], false, 'adminGenerateReport');
     $router->get('/generate', function () use ($app) {
       session_start();
       $_SESSION['adminPage'] = "generate";

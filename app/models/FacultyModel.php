@@ -14,6 +14,14 @@ class FacultyModel
     return $stmt->fetchAll(\PDO::FETCH_ASSOC);
   }
 
+  public static function getFaculty()
+  {
+    $db = Flight::db();
+    $stmt = $db->prepare("SELECT users.id as user_id_alias, userdetails.*,  faculty.*, campuses.*, faculty_rankings.* FROM users LEFT JOIN userdetails ON users.id=userdetails.user_id LEFT JOIN faculty ON userdetails.user_id=faculty.user_id LEFT JOIN campuses on faculty.campus_id=campuses.campusID LEFT JOIN faculty_rankings ON faculty.acadrank_id=faculty_rankings.faculty_rank_id WHERE users.role = '3' ORDER BY users.created_at ASC;");
+    $stmt->execute();
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+  }
+
   public static function getUnverifiedFaculty()
   {
     $db = Flight::db();

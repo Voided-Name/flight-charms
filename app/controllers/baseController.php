@@ -264,6 +264,7 @@ class baseController
     ]);
   }
 
+
   public function getCompanies()
   {
     $db = Flight::db();
@@ -724,11 +725,10 @@ class baseController
     $status = $stmt->execute();
 
 
-
     if ($_SESSION['role'] == 1) {
       $stmt = $db->prepare("SELECT * FROM users LEFT JOIN userdetails ON users.id =  userdetails.user_id LEFT JOIN alumni_graduated_course ON userdetails.user_id = alumni_graduated_course.user_id WHERE users.id = :userid");
       $status = $stmt->execute(['userid' => $_SESSION['userid']]);
-      $alumniData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+      $alumniData = $stmt->fetch(\PDO::FETCH_ASSOC);
 
       $stmt = $db->prepare('SELECT * FROM courses');
       $status = $stmt->execute();
@@ -751,6 +751,315 @@ class baseController
       Flight::view()->set('mapMajors', $mapMajors);
     }
 
-    $this->app->render('verifying');
+    bdump($alumniData);
+
+    baseController::renderLocation($alumniData['region'], $alumniData['province'], $alumniData['city'], $alumniData['barangay']);
+
+    $this->app->render('verifyingAlumni');
+  }
+
+  public function verifyingAlumniSave()
+  {
+    session_start();
+
+    if ($_SESSION['role'] == 1) {
+      $email = strip_tags($_POST['alumniEmail']);
+      $username = strip_tags($_POST['alumniUsername']);
+      $firstName = strip_tags($_POST['alumniFName']);
+      $middleName = strip_tags($_POST['alumniMName']);
+      $lastName = strip_tags($_POST['alumniLName']);
+      $suffix = strip_tags($_POST['alumniSuffix']);
+      $region = strip_tags($_POST['regions'] ?? "0");
+      $province = strip_tags($_POST['provinces'] ?? "0");
+      $municipality = strip_tags($_POST['municipalities'] ?? "0");
+      $barangay = strip_tags($_POST['barangays'] ?? "0");
+      $streetAdd = strip_tags($_POST['alumniStAdd']);
+      $contactNumber = strip_tags($_POST['alumniCPNumber']);
+      $birthDate = strip_tags($_POST['alumniBDate']);
+      $studentId = strip_tags($_POST['alumniStudId']);
+      $course = strip_tags($_POST['alumniCourse']);
+      $major = strip_tags($_POST['alumniMajor']);
+      $campus = strip_tags($_POST['alumniCampus']);
+      $yearGraduated = strip_tags($_POST['alumniGraduated']);
+      $yearEnrolled = strip_tags($_POST['alumniEnrolled']);
+
+      $db = Flight::db();
+      $stmt = $db->prepare('SELECT * FROM userdetails WHERE email_address = :email');
+      $status = $stmt->execute(['email' => $email]);
+      $selectUser  = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+      if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      } else {
+        if ($selectUser) {
+          if (!($selectUser['user_id'] == $_SESSION['userid'])) {
+            $debug = $selectUser['user_id'];
+            $debug2 = $_SESSION['userid'];
+            $emailErrExists = true;
+          }
+        } else {
+          $stmt = $db->prepare('UPDATE userdetails SET email_address = :email_address WHERE user_id = :userid');
+          $status = $stmt->execute(['email_address' => $email, 'userid' => $_SESSION['userid']]);
+        }
+      }
+
+      $stmt = $db->prepare('SELECT * FROM users WHERE username = :username');
+      $status = $stmt->execute(['username' => $username]);
+      $selectUser  = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+      if ($selectUser) {
+        if (!($selectUser[0]['id'] == $_SESSION['userid'])) {
+          $usernameErr = true;
+        }
+      } else {
+        $stmt = $db->prepare('UPDATE users SET username = :username WHERE id = :userid');
+        $status = $stmt->execute(['username' => $username, 'userid' => $_SESSION['userid']]);
+      }
+
+      $stmt = $db->prepare('UPDATE userdetails SET contact_number = :contactNumber, first_name = :firstName, middle_name = :middleName, birth_date = :birthDate, region = :region, province = :province, city = :municipality, barangay = :barangay, street_add = :streetAdd, suffix = :suffix, last_name = :lastName  WHERE user_id = :userid');
+      $status = $stmt->execute(['contactNumber' => $contactNumber, 'firstName' => $firstName, 'middleName' => $middleName, 'birthDate' => $birthDate, 'region' => $region, 'province' => $province, 'municipality' => $municipality, 'barangay' => $barangay, 'streetAdd' => $streetAdd, 'suffix' => $suffix,  'userid' => $_SESSION['userid'], 'lastName' => $lastName]);
+
+      $stmt = $db->prepare('SELECT * FROM coursesmajor');
+      $status = $stmt->execute();
+      $majors = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+      $mapMajors = array_combine(array_column($majors, 'majorName'), array_column($majors, 'major_id'));
+
+      $stmt = $db->prepare('UPDATE alumni_graduated_course SET course_id = :course, campus = :campus, studnum = :studentId, major_id = :major, year_started = :yearEnrolled, year_graduated = :yearGraduated WHERE user_id = :userid');
+      $updateDetails3 = $stmt->execute(['course' => $course, 'campus' => $campus, 'studentId' => $studentId, 'major' => $mapMajors[$major], 'yearEnrolled' => $yearEnrolled, 'yearGraduated' => $yearGraduated, 'userid' => $_SESSION['userid']]);
+
+      if (!$updateDetails3) {
+        $stmt = $db->prepare('SELECT * FROM alumni_graduated_course WHERE user_id = :userid');
+        $alumni_grad_table_exist = $stmt->execute(['userid' => $_SESSION['userid']]);
+
+
+        if (!$alumni_grad_table_exist) {
+          $stmt = $db->prepare('INSERT INTO alumni_graduated_course 
+                              (course_id, campus, studnum, major_id, year_started, year_graduated, user_id) 
+                              VALUES 
+                              (:course, :campus, :studentId, :major, :yearEnrolled, :yearGraduated, :userid)
+                              ');
+          $updateDetails3 = $stmt->execute(['course_id' => $course, 'campus' => $campus, 'studentId' => $studentId, 'major' => $mapMajors[$major], 'yearEnrolled' => $yearEnrolled, 'yearGraduated' => $yearGraduated, 'userid' => $_SESSION['userid']]);
+        }
+      }
+    }
+    Flight::redirect(Flight::request()->base . '/verifying/alumni');
+  }
+
+  public function verifyingFacultySave()
+  {
+    session_start();
+
+    $email = strip_tags($_POST['facultyEmail']);
+    $username = strip_tags($_POST['facultyUsername']);
+    $firstName = strip_tags($_POST['facultyFName']);
+    $middleName = strip_tags($_POST['facultyMName']);
+    $lastName = strip_tags($_POST['facultyLName']);
+    $suffix = strip_tags($_POST['facultySuffix']);
+    $region = strip_tags($_POST['regions'] ?? '0');
+    $province = strip_tags($_POST['provinces'] ?? '0');
+    $municipality = strip_tags($_POST['municipalities'] ?? '0');
+    $barangay = strip_tags($_POST['barangays'] ?? '0');
+    $streetAdd = strip_tags($_POST['facultyStAdd']);
+    $contactNumber = strip_tags($_POST['facultyCPNumber']);
+    $birthDate = strip_tags($_POST['facultyBDate']);
+    $campus = strip_tags($_POST['facultyCampus']);
+    $facultyID = strip_tags($_POST['facultyID']);
+    $acadRank = strip_tags($_POST['facultyRank']);
+
+    $db = Flight::db();
+    $stmt = $db->prepare('SELECT * FROM userdetails WHERE email_address = :email');
+    $status = $stmt->execute(['email' => $email]);
+    $selectUser  = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } else {
+      if ($selectUser) {
+        if (!($selectUser['user_id'] == $_SESSION['userid'])) {
+          $debug = $selectUser['user_id'];
+          $debug2 = $_SESSION['userid'];
+          $emailErrExists = true;
+        }
+      } else {
+        $stmt = $db->prepare('UPDATE userdetails SET email_address = :email_address WHERE user_id = :userid');
+        $status = $stmt->execute(['email_address' => $email, 'userid' => $_SESSION['userid']]);
+      }
+    }
+
+    $stmt = $db->prepare('SELECT * FROM users WHERE username = :username');
+    $status = $stmt->execute(['username' => $username]);
+    $selectUser  = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    if ($selectUser) {
+      if (!($selectUser['id'] == $_SESSION['userid'])) {
+        $usernameErr = true;
+      }
+    } else {
+      $stmt = $db->prepare('UPDATE users SET username = :username WHERE id = :userid');
+      $status = $stmt->execute(['username' => $username, 'userid' => $_SESSION['userid']]);
+    }
+
+    $stmt = $db->prepare('UPDATE userdetails SET contact_number = :contactNumber, first_name = :firstName, middle_name = :middleName, birth_date = :birthDate, region = :region, province = :province, city = :municipality, barangay = :barangay, street_add = :streetAdd, suffix = :suffix, last_name = :lastName  WHERE user_id = :userid');
+    $status = $stmt->execute(['contactNumber' => $contactNumber, 'firstName' => $firstName, 'middleName' => $middleName, 'birthDate' => $birthDate, 'region' => $region, 'province' => $province, 'municipality' => $municipality, 'barangay' => $barangay, 'streetAdd' => $streetAdd, 'suffix' => $suffix,  'userid' => $_SESSION['userid'], 'lastName' => $lastName]);
+
+    $stmt = $db->prepare('UPDATE faculty SET campus_id = :campus, acadrank_id = :acadRank, employee_num = :facultyID');
+    $updateDetails3 = $stmt->execute(['campus' => $campus, 'acadRank' => $acadRank, 'facultyID' => $facultyID]);
+
+    if (!$updateDetails3) {
+      $stmt = $db->prepare('SELECT * FROM faculty WHERE user_id = :userid');
+      $faculty_exists = $stmt->execute(['userid' => $_SESSION['userid']]);
+      if (!$faculty_exists) {
+        $stmt = $db->prepare('INSERT INTO faculty (user_id, campus_id, acadrank_id, employee_num) VALUES (:userid, :campus, :acadRank, :facultyID)');
+        $status = $stmt->execute(['userid' => $_SESSION['userid'], 'campus' => $campus, 'acadRank' => $acadRank, 'facultyID' => $facultyID]);
+      }
+    }
+    Flight::redirect(Flight::request()->base . '/verifying/faculty');
+  }
+
+
+  public function verifyingFaculty()
+  {
+    session_start();
+
+    $db = Flight::db();
+    $stmt = $db->prepare('SELECT * FROM campuses');
+    $status = $stmt->execute();
+    $campuses = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    $db = Flight::db();
+    $stmt = $db->prepare('SELECT * FROM faculty_rankings');
+    $status = $stmt->execute();
+    $acadRanks = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    $db = Flight::db();
+    $stmt = $db->prepare('SELECT * FROM users LEFT JOIN userdetails ON users.id = userdetails.user_id LEFT JOIN faculty ON userdetails.user_id = faculty.user_id WHERE users.id = :userid');
+    $status = $stmt->execute(['userid' => $_SESSION['userid']]);
+    $facultyData = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    Flight::view()->set('campuses', $campuses);
+    Flight::view()->set('acadRanks', $acadRanks);
+    Flight::view()->set('facultyData', $facultyData);
+
+    bdump($facultyData);
+
+    baseController::renderLocation($facultyData['region'] ?? '0', $facultyData['province'] ?? '0', $facultyData['city'] ?? '0', $facultyData['barangay'] ?? '0');
+
+    $this->app->render('verifyingFaculty');
+  }
+
+  public function verifyingEmployer()
+  {
+    session_start();
+
+    $db = Flight::db();
+    $stmt = $db->prepare('SELECT * FROM companies');
+    $status = $stmt->execute();
+    $companies = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    $stmt = $db->prepare('SELECT * FROM users LEFT JOIN userdetails ON users.id = userdetails.user_id LEFT JOIN employer_users ON userdetails.user_id = employer_users.user_id WHERE users.id = :userid');
+    $status = $stmt->execute(['userid' => $_SESSION['userid']]);
+    $employerData = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    Flight::view()->set('companies', $companies);
+    Flight::view()->set('employerData', $employerData);
+
+
+    bdump($employerData);
+    baseController::renderLocation($employerData['region'], $employerData['province'], $employerData['city'], $employerData['barangay']);
+
+    $this->app->render('verifyingEmployer');
+  }
+
+  public function verifyingEmployerSave()
+  {
+    session_start();
+
+    $email = strip_tags($_POST['employerEmail']);
+    $username = strip_tags($_POST['employerUsername']);
+    $firstName = strip_tags($_POST['employerFName']);
+    $middleName = strip_tags($_POST['employerMName']);
+    $lastName = strip_tags($_POST['employerLName']);
+    $suffix = strip_tags($_POST['employerSuffix']);
+    $region = strip_tags($_POST['regions'] ?? '0');
+    $province = strip_tags($_POST['provinces'] ?? '0');
+    $municipality = strip_tags($_POST['municipalities'] ?? '0');
+    $barangay = strip_tags($_POST['barangays'] ?? '0');
+    $streetAdd = strip_tags($_POST['employerStAdd']);
+    $contactNumber = strip_tags($_POST['employerCPNumber']);
+    $birthDate = strip_tags($_POST['employerBDate']);
+    $companyName = strip_tags($_POST['employerCompany']);
+
+    if ($companyName == "0") {
+      $companyName2 = strip_tags($_POST['employerCompanySTR']);
+    } else {
+      $companyName2 = '';
+    }
+
+    $position = strip_tags($_POST['employerPosition']);
+
+    $db = Flight::db();
+    $stmt = $db->prepare('SELECT * FROM userdetails WHERE email_address = :email');
+    $status = $stmt->execute(['email' => $email]);
+    $selectUser  = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } else {
+      if ($selectUser) {
+        if (!($selectUser['user_id'] == $_SESSION['userid'])) {
+          $debug = $selectUser['user_id'];
+          $debug2 = $_SESSION['userid'];
+          $emailErrExists = true;
+        }
+      } else {
+        $stmt = $db->prepare('UPDATE userdetails SET email_address = :email_address WHERE user_id = :userid');
+        $status = $stmt->execute(['email_address' => $email, 'userid' => $_SESSION['userid']]);
+      }
+    }
+
+    $stmt = $db->prepare('SELECT * FROM users WHERE username = :username');
+    $status = $stmt->execute(['username' => $username]);
+    $selectUser  = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+    if ($selectUser) {
+      if (!($selectUser['id'] == $_SESSION['userid'])) {
+        $usernameErr = true;
+      }
+    } else {
+      $stmt = $db->prepare('UPDATE users SET username = :username WHERE id = :userid');
+      $status = $stmt->execute(['username' => $username, 'userid' => $_SESSION['userid']]);
+    }
+
+    $stmt = $db->prepare('UPDATE userdetails SET contact_number = :contactNumber, first_name = :firstName, middle_name = :middleName, birth_date = :birthDate, region = :region, province = :province, city = :municipality, barangay = :barangay, street_add = :streetAdd, suffix = :suffix, last_name = :lastName  WHERE user_id = :userid');
+    $status = $stmt->execute(['contactNumber' => $contactNumber, 'firstName' => $firstName, 'middleName' => $middleName, 'birthDate' => $birthDate, 'region' => $region, 'province' => $province, 'municipality' => $municipality, 'barangay' => $barangay, 'streetAdd' => $streetAdd, 'suffix' => $suffix,  'userid' => $_SESSION['userid'], 'lastName' => $lastName]);
+
+
+    if ($companyName2 != '') {
+      $stmt = $db->prepare('UPDATE employer_users SET company_unvalidated = :companyName2, company_id = 0, company_position = :position WHERE user_id = :userid');
+      $updateDetails3 = $stmt->execute(['companyName2' => $companyName2, 'position' => $position, 'userid' => $_SESSION['userid']]);
+
+      if (!$updateDetails3) {
+        $stmt = $db->prepare('SELECT * FROM employer_users WHERE user_id = :userid');
+        $employer_users_exists = $stmt->execute(['userid' => $_SESSION['userid']]);
+
+        if (!$employer_users_exists) {
+          $stmt = $db->prepare('INSERT INTO employer_users (user_id, company_unvalidated, company_id, company_position) VALUES (:userid, :unvalidated, 0, :position)');
+          $status = $stmt->execute(['userid' => $_SESSION['userid'], 'unvalidated' => $companyName2, 'position' => $position]);
+        }
+      }
+    } else {
+      $stmt = $db->prepare('UPDATE employer_users SET company_id = :companyName, company_position = :position WHERE user_id = :userid');
+      $updateDetails3 = $stmt->execute(['companyName' => $companyName, 'position' => $position, 'userid' => $_SESSION['userid']]);
+
+      if (!$updateDetails3) {
+        $stmt = $db->prepare('SELECT * FROM employer_users WHERE user_id = :userid');
+        $employer_users_exists = $stmt->execute(['userid' => $_SESSION['userid']]);
+
+        if (!$employer_users_exists) {
+          $stmt = $db->prepare('INSERT INTO employer_users (user_id, company_id, company_position) VALUES (:userid, :companyName, :position)');
+          $status = $stmt->execute(['userid' => $_SESSION['userid'], 'companyName' => $companyName, 'position' => $position]);
+        }
+      }
+    }
+
+    Flight::redirect(Flight::request()->base . '/verifying/employer');
   }
 }

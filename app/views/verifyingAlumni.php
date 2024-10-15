@@ -37,7 +37,6 @@ if (isset($_POST['saveBtn'])) {
     $yearGraduated = $strip->strip($_POST['alumniGraduated']);
     $yearEnrolled = $strip->strip($_POST['alumniEnrolled']);
 
-
     $selectUser = $func->select_one('users', array('username', '=', $email));
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -319,6 +318,7 @@ if (isset($_POST['saveBtn'])) {
       max-height: 300px;
     }
   </style>
+  <script src="https://unpkg.com/htmx.org@2.0.3"></script>
 </head>
 
 <body class="d-flex row align-items-center justify-content-center">
@@ -345,23 +345,7 @@ if (isset($_POST['saveBtn'])) {
                                                                                                                   ?>Modal">Complete User Profile</button>
       <div id="errDiv"></div>
     </div>
-  </div>
-  <div class="modal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Modal title</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p>Modal body text goes here.</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
+    <button>Back</button>
   </div>
 
   <!-- Alumni Modal -->
@@ -377,66 +361,51 @@ if (isset($_POST['saveBtn'])) {
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form method="POST" class="row">
+            <form method="POST" action="verifyingAlumniSave" class="row">
               <div class="col-md-4 col-sm-12" id="">
                 <label for="alumniEmail" class="form-label">Email</label>
-                <input type="email" class="form-control" id="alumniEmail" name="alumniEmail" value="<?php echo $alumniData[0]['email_address'] ?>" required>
+                <input type="email" class="form-control" id="alumniEmail" name="alumniEmail" value="<?php echo $alumniData['email_address'] ?>" required>
               </div>
               <div class="col-md-4 col-sm-12" id="">
                 <label for="alumniUsername" class="form-label">Username</label>
-                <input type="text" class="form-control" id="alumniUsername" name="alumniUsername" value="<?php echo $alumniData[0]['username'] ?>" required>
+                <input type="text" class="form-control" id="alumniUsername" name="alumniUsername" value="<?php echo $alumniData['username'] ?>" required>
               </div>
               <div class="col-md-4 col-sm-12" id="">
                 <label for="alumniFName" class="form-label">First Name</label>
-                <input type="text" class="form-control" id="alumniFName" name="alumniFName" value="<?php echo $alumniData[0]['first_name'] ?>" placeholder="Mark" required>
+                <input type="text" class="form-control" id="alumniFName" name="alumniFName" value="<?php echo $alumniData['first_name'] ?>" placeholder="Mark" required>
               </div>
               <div class="col-md-4 col-sm-12" id="">
                 <label for="alumniMName" class="form-label">Middle Name</label>
-                <input type="text" class="form-control" id="alumniMName" name="alumniMName" value="<?php echo $alumniData[0]['middle_name'] ?>" placeholder="Santos">
+                <input type="text" class="form-control" id="alumniMName" name="alumniMName" value="<?php echo $alumniData['middle_name'] ?>" placeholder="Santos">
               </div>
               <div class="col-md-4 col-sm-12" id="">
                 <label for="alumniLName" class="form-label">Last Name</label>
-                <input type="text" class="form-control" id="alumniLName" name="alumniLName" value="<?php echo $alumniData[0]['last_name'] ?>" placeholder="Santos" required>
+                <input type="text" class="form-control" id="alumniLName" name="alumniLName" value="<?php echo $alumniData['last_name'] ?>" placeholder="Santos" required>
               </div>
               <div class="col-md-4 col-sm-12" id="">
                 <label for="alumniSuffix" class="form-label">Suffix</label>
-                <input type="text" class="form-control" id="alumniSuffix" name="alumniSuffix" value="<?php echo $alumniData[0]['suffix'] ?>" placeholder="">
+                <input type="text" class="form-control" id="alumniSuffix" name="alumniSuffix" value="<?php echo $alumniData['suffix'] ?>" placeholder="">
               </div>
-              <div class="col-md-3 col-sm-12" id="">
-                <label for="alumniRegion" class="form-label">Region</label>
-                <select class="form-select" id="alumniRegion" name="alumniRegion">
-                </select>
+              <hr>
+              <div class="col-md-10 m-2">
+                <?= $locations ?>
               </div>
-              <div class="col-md-3 col-sm-12" id="">
-                <label for="alumniProvince" class="form-label">Province</label>
-                <select class="form-select" id="alumniProvince" name="alumniProvince">
-                </select>
-              </div>
-              <div class="col-md-3 col-sm-12" id="">
-                <label for="alumniMunicipality" class="form-label">City</label>
-                <select class="form-select" id="alumniMunicipality" name="alumniMunicipality">
-                </select>
-              </div>
-              <div class="col-md-3 col-sm-12" id="">
-                <label for="alumniBarangay" class="form-label">Barangay</label>
-                <select class="form-select" id="alumniBarangay" name="alumniBarangay">
-                </select>
-              </div>
+              <hr>
               <div class="col-12">
                 <label for="alumniStAdd" class="form-label">Street Address</label>
-                <input type="text" class="form-control" id="alumniStAdd" name="alumniStAdd" value="<?php echo $alumniData[0]['street_add'] ?>">
+                <input type="text" class="form-control" id="alumniStAdd" name="alumniStAdd" value="<?php echo $alumniData['street_add'] ?>">
               </div>
               <div class="col-md-6 col-sm-12" id="">
                 <label for="alumniCPNumber" class="form-label">Contact Number</label>
-                <input type="text" class="form-control" id="alumniCPNumber" name="alumniCPNumber" placeholder="" value="<?php echo $alumniData[0]['contact_number'] ?>" maxlength="11" required>
+                <input type="text" class="form-control" id="alumniCPNumber" name="alumniCPNumber" placeholder="" value="<?php echo $alumniData['contact_number'] ?>" maxlength="11" required>
               </div>
               <div class="col-md-6 col-sm-12" id="">
                 <label for="alumniBDate" class="form-label">Birth Date</label>
-                <input class="form-control" type="date" id="alumniBDate" name="alumniBDate" value="<?php echo $alumniData[0]['birth_date'] ?>" required />
+                <input class="form-control" type="date" id="alumniBDate" name="alumniBDate" value="<?php echo $alumniData['birth_date'] ?>" required />
               </div>
               <div class="col-md-4 col-sm-12" id="">
                 <label for="alumniStudId" class="form-label">Alumni ID</label>
-                <input type="text" class="form-control" id="alumniStudId" name="alumniStudId" value="<?php echo $alumniData[0]['studnum'] ?>" required>
+                <input type="text" class="form-control" id="alumniStudId" name="alumniStudId" value="<?php echo $alumniData['studnum'] ?>" required>
               </div>
               <div class="col-md-4 col-sm-12" id="">
                 <label for="alumniCourse" class="form-label">Course</label>
@@ -444,7 +413,7 @@ if (isset($_POST['saveBtn'])) {
                   <?php
                   foreach ($courses as $course) {
                   ?>
-                    <option <?php if ($course['courseID'] == $alumniData[0]['course_id']) {
+                    <option <?php if ($course['courseID'] == $alumniData['course_id']) {
                               echo "selected ";
                             } ?>value="<?php echo $course['courseID'] ?>"><?php echo $course['courseName'] ?></option>
                   <?php
@@ -466,7 +435,7 @@ if (isset($_POST['saveBtn'])) {
                   ?>
 
                     <option <?php
-                            if ($campus['campusID'] == $alumniData[0]['campus']) {
+                            if ($campus['campusID'] == $alumniData['campus']) {
                               echo "selected ";
                             }
                             ?> value="<?php echo $campus['campusID'] ?>"><?php echo $campus['campusName'] ?></option>
@@ -478,11 +447,11 @@ if (isset($_POST['saveBtn'])) {
 
               <div class="col-md-4 col-sm-12">
                 <label for="alumniGraduated" class="form-label">Year Graduated</label>
-                <input type="number" class="form-control" id="alumniGraduated" name="alumniGraduated" value=<?php echo $alumniData[0]['year_graduated'] ?> aria-describedby="" required>
+                <input type="number" class="form-control" id="alumniGraduated" name="alumniGraduated" value=<?php echo $alumniData['year_graduated'] ?> aria-describedby="" required>
               </div>
               <div class="col-md-4 col-sm-12">
                 <label for="alumniEnrolled" class="form-label">Year Enrolled (Initially)</label>
-                <input type="number" class="form-control" id="alumniEnrolled" name="alumniEnrolled" value=<?php echo $alumniData[0]['year_started'] ?> aria-describedby="" required>
+                <input type="number" class="form-control" id="alumniEnrolled" name="alumniEnrolled" value=<?php echo $alumniData['year_started'] ?> aria-describedby="" required>
               </div>
           </div>
           <div class="modal-footer">
@@ -602,7 +571,7 @@ if (isset($_POST['saveBtn'])) {
         for (x = 0; x < courseOptionsSpec.length; x++) {
           let el = document.createElement("option");
           el.textContent = courseOptionsSpec[x];
-          if (courseOptionsSpec[x] == "<?php echo  array_search($alumniData[0]["major_id"], $mapMajors) ?>") {
+          if (courseOptionsSpec[x] == "<?php echo  array_search($alumniData["major_id"], $mapMajors) ?>") {
             el.selected = true;
           }
           el.value = courseOptionsSpec[x];
@@ -655,6 +624,7 @@ if (isset($_POST['saveBtn'])) {
       document.getElementById("main-content").style.display = "block";
       document.getElementById("main-content").classList.add("animate__animated");
       document.getElementById("main-content").classList.add("animate__zoomIn");
+      alumniMajorOptions();
     })
 
     $(document).ready(function() {
