@@ -10,18 +10,18 @@ date_default_timezone_set('America/New_York');
 error_reporting(E_ALL);
 
 // Set the default character encoding
-if(function_exists('mb_internal_encoding') === true) {
-	mb_internal_encoding('UTF-8');
+if (function_exists('mb_internal_encoding') === true) {
+  mb_internal_encoding('UTF-8');
 }
 
 // Set the default locale
-if(function_exists('setlocale') === true) {
-	setlocale(LC_ALL, 'en_US.UTF-8');
+if (function_exists('setlocale') === true) {
+  setlocale(LC_ALL, 'en_US.UTF-8');
 }
 
 // Get the $app var to use below
-if(empty($app)) {
-	$app = Flight::app();
+if (empty($app)) {
+  $app = Flight::app();
 }
 
 // if you want to load classes that have underscores in them, comment out the following line
@@ -47,16 +47,16 @@ $app->set('flight.content_length', true); // if flight should send a content len
  * Check out the docs here:
  * https://tracy.nette.org/
  */
-Debugger::enable(); // auto tries to figure out your environment
+//Debugger::enable(); // auto tries to figure out your environment
 // Debugger::enable(Debugger::DEVELOPMENT) // sometimes you have to be explicit (also Debugger::PRODUCTION)
 // Debugger::enable('23.75.345.200'); // you can also provide an array of IP addresses
-Debugger::$logDirectory = __DIR__ . $ds . '..' . $ds . 'log';
-Debugger::$strictMode = true; // display all errors
+//Debugger::$logDirectory = __DIR__ . $ds . '..' . $ds . 'log';
+//Debugger::$strictMode = true; // display all errors
 // Debugger::$strictMode = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED; // all errors except deprecated notices
-if (Debugger::$showBar && php_sapi_name() !== 'cli') {
-    $app->set('flight.content_length', false); // if Debugger bar is visible, then content-length can not be set by Flight
-	(new TracyExtensionLoader($app));
-}
+//if (Debugger::$showBar && php_sapi_name() !== 'cli') {
+//  $app->set('flight.content_length', false); // if Debugger bar is visible, then content-length can not be set by Flight
+//  (new TracyExtensionLoader($app));
+//}
 
 /* 
  * This is where you will store database credentials, api credentials
@@ -67,21 +67,21 @@ if (Debugger::$showBar && php_sapi_name() !== 'cli') {
  * What you store here is totally up to you.
  */
 return [
-	'database' => [
-		// uncomment the below 4 lines for mysql
-		// 'host' => 'localhost',
-		// 'dbname' => 'dbname',
-		// 'user' => 'user',
-		// 'password' => 'password'
+  'database' => [
+    // uncomment the below 4 lines for mysql
+    // 'host' => 'localhost',
+    // 'dbname' => 'dbname',
+    // 'user' => 'user',
+    // 'password' => 'password'
 
-		// uncomment the following line for sqlite
-		// 'file_path' => __DIR__ . $ds . '..' . $ds . 'database.sqlite'
-	],
+    // uncomment the following line for sqlite
+    // 'file_path' => __DIR__ . $ds . '..' . $ds . 'database.sqlite'
+  ],
 
-	// this is just here for an example
-	// 'google_oauth' => [
-	// 	'client_id' => 'client_id',
-	// 	'client_secret' => 'client_secret',
-	// 	'redirect_uri' => 'redirect_uri'
-	// ],
+  // this is just here for an example
+  // 'google_oauth' => [
+  // 	'client_id' => 'client_id',
+  // 	'client_secret' => 'client_secret',
+  // 	'redirect_uri' => 'redirect_uri'
+  // ],
 ];

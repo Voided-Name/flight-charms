@@ -86,7 +86,6 @@ class baseController
   public function registerAlumni()
   {
     $email = strip_tags(Flight::request()->data->inputEmail);
-    $passwordAlias = strip_tags(Flight::request()->data->inputPassword);
     $password = md5(strip_tags(Flight::request()->data->inputPassword));
     $firstName = strip_tags(Flight::request()->data->inputFName);
     $middleName = strip_tags(Flight::request()->data->inputMName);
@@ -108,10 +107,10 @@ class baseController
     $db->beginTransaction();
 
     try {
-      $stmt1 = $db->prepare("INSERT INTO users (username, passAlias, password, role, is_verified, created_at) 
-                           VALUES (:email, :passwordAlias, :password, 1, 0, :date)");
+      $stmt1 = $db->prepare("INSERT INTO users (username, password, role, is_verified, created_at) 
+                           VALUES (:email, :password, 1, 0, :date)");
 
-      if (!$stmt1->execute(['email' => $email, 'passwordAlias' => $passwordAlias, 'password' => $password, 'date' => $created_at])) {
+      if (!$stmt1->execute(['email' => $email, 'password' => $password, 'date' => $created_at])) {
         $errorInfo = $stmt1->errorInfo();
         throw new \Exception("First insertion failed. SQLSTATE: " . $errorInfo[0] . " Driver Error Code: " . $errorInfo[1] . " Driver Error Message: " . $errorInfo[2]);
       }
@@ -718,7 +717,6 @@ class baseController
   public function verifyingAlumni()
   {
     session_start();
-
 
     $db = Flight::db();
     $stmt = $db->prepare('SELECT * FROM companies');

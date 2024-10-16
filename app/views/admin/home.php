@@ -66,12 +66,6 @@
                   Vacancies
                 </label>
               </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="reportValues[]" value="applications" id="techJs">
-                <label class="form-check-label" for="techJs">
-                  Applications
-                </label>
-              </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
